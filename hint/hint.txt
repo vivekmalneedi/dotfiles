@@ -1,0 +1,8 @@
+#connect to network
+nmtui
+
+#extract files
+dtrx
+
+#touchpad
+maxtaptime=180
