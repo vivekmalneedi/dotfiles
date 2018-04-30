@@ -1,0 +1,5 @@
+plugins: fetchart embedart acousticbrainz scrub thumbnails mpdupdate chroma fromfilename edit gmusic
+
+gmusic:
+  email: vivekmalneedi@gmail.com
+  password: pbcbtuzxjqgqblfz
