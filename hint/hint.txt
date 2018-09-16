@@ -6,3 +6,14 @@ dtrx
 
 #touchpad
 maxtaptime=180
+
+#disk space
+df -h
+du -h /home | sort -rh
+ncdu
+
+#font
+fc-cache -f #reload
+
+#timezone
+tzupdate

@@ -1,19 +1,29 @@
+!Xft.dpi: 128
+!Xft.autohint: 0
+!Xft.lcdfilter:  lcddefault
+!Xft.hintstyle:  hintfull
+!Xft.hinting: 1
+!Xft.antialias: 1
+Xft.rgba: rgb
+
 urxvt.termName: rxvt-unicode
 urxvt.scrollBar: false
 !urxvt.background: black
 !urxvt.foreground: gray
 urxvt.transparent: false
-urxvt.font: xft:DroidSansMono Nerd Font Mono:pixelsize=32
-urxvt.boldFont: xft:DroidSansMono Nerd Font Mono:pixelsize=32:weight=bold
-!urxvt.letterSpace: -1
+urxvt.font: xft: SauceCodePro Nerd Font Mono:pixelsize=22
+urxvt.boldFont: xft: SauceCodePro Nerd Font Mono:pixelsize=22:weight=bold
+urxvt.letterSpace: -1
 urxvt.saveLines: 1000000
 URxvt.internalBorder:  0
 
-URxvt.keysym.Shift-Control-V: perl:clipboard:paste
+!URxvt.keysym.Shift-Control-V: perl:clipboard:paste
 URxvt.iso14755: False
-URxvt.perl-ext-common: default,matcher,clipboard
+URxvt.perl-ext-common: default,matcher
 URxvt.url-launcher: /usr/bin/xdg-open
-URxvt.keysym.M-u: perl:matcher:selec
+!URxvt.keysym.M-u: perl:matcher:selec
+URxvt.matcher.button: 1
+URxvt.matcher.rend.0: Uline Bold fg5
 
 *.foreground:   #ffeefc
 *.background:   #141021

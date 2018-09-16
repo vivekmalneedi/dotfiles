@@ -1,1 +1,1 @@
-plugins: fetchart embedart acousticbrainz scrub thumbnails mpdupdate chroma fromfilename edit gmusic
+plugins: inline convert web fetchart embedart acousticbrainz scrub thumbnails mpdupdate chroma fromfilename edit
