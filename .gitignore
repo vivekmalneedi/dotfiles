@@ -1,2 +1,5 @@
 mpd/.config/mpd/playlists/
+mpd/.config/mpd/mpd.db
 *.log
+ncmpcpp/.ncmpcpp/art.sh
+ncmpcpp/.ncmpcpp/artconfig

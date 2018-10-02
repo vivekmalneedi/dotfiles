@@ -1,26 +1,24 @@
-!Xft.dpi: 128
-!Xft.autohint: 0
-!Xft.lcdfilter:  lcddefault
-!Xft.hintstyle:  hintfull
-!Xft.hinting: 1
-!Xft.antialias: 1
+!Xft.dpi: 221
+Xft.autohint: 0
+Xft.lcdfilter:  lcddefault
+Xft.hintstyle:  hintslight
+Xft.hinting: 1
+Xft.antialias: 1
 Xft.rgba: rgb
 
-urxvt.termName: rxvt-unicode
-urxvt.scrollBar: false
-!urxvt.background: black
-!urxvt.foreground: gray
-urxvt.transparent: false
-urxvt.font: xft: SauceCodePro Nerd Font Mono:pixelsize=22
-urxvt.boldFont: xft: SauceCodePro Nerd Font Mono:pixelsize=22:weight=bold
-urxvt.letterSpace: -1
-urxvt.saveLines: 1000000
+URxvt.termName: rxvt-unicode
+URxvt.scrollBar: false
+URxvt.transparent: false
+URxvt.font: xft: SauceCodePro Nerd Font Mono:style=Regular:pixelsize=24, xft: Source Code Pro for Powerline:style=Regular:pixelsize=24, xft: DejaVuSansMono Nerd Font:pixelsize=24
+URxvt.boldFont: xft: SauceCodePro Nerd Font Mono:style=Bold:pixelsize=24, xft: Source Code Pro for Powerline:style=Bold:pixelsize=24, xft: DejaVuSansMono Nerd Font:style=Bold:pixelsize=24
+URxvt.letterSpace: -1
+URxvt.saveLines: 1000000
 URxvt.internalBorder:  0
 
 !URxvt.keysym.Shift-Control-V: perl:clipboard:paste
-URxvt.iso14755: False
+URxvt.iso14755: True
 URxvt.perl-ext-common: default,matcher
-URxvt.url-launcher: /usr/bin/xdg-open
+URxvt.url-launcher: firefox
 !URxvt.keysym.M-u: perl:matcher:selec
 URxvt.matcher.button: 1
 URxvt.matcher.rend.0: Uline Bold fg5
