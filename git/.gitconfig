@@ -1,5 +1,10 @@
 [user]
 	email = vivekmalneedi@gmail.com
 	name = Vivek Malneedi
+	signingkey = 3F7C36B376F96C60
 [color]
 	ui = auto
+[gpg]
+	program = gpg2
+[commit]
+	gpgsign = true

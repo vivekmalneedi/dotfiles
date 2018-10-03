@@ -62,6 +62,7 @@ let g:airline_powerline_fonts = 1
 let g:neoformat_basic_format_align = 1
 let g:neoformat_basic_format_retab = 1
 let g:neoformat_basic_format_trim = 1
+let g:neoformat_enabled_python = ['yapf', 'isort']
 augroup fmt
     autocmd!
     autocmd BufWritePre * undojoin | Neoformat
