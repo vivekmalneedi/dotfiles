@@ -65,3 +65,4 @@ transfer() { if [ $# -eq 0 ]; then echo -e "No arguments specified. Usage:\necho
     # else
     #    eval $( gpg-agent --daemon --options ~/.gnupg/gpg-agent.conf)
     #fi
+    #test
