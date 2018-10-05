@@ -48,14 +48,19 @@ alias vim='nvim'
 alias vi='nvim'
 export TERMINAL="urxvt"
 export IDF_PATH=~/.esp-idf-sdk
+export PATH="/usr/lib/ccache/bin/:$PATH"
 
 #transfer
 transfer() { if [ $# -eq 0 ]; then echo -e "No arguments specified. Usage:\necho transfer /tmp/test.md\ncat /tmp/test.md | transfer test.md"; return 1; fi
     tmpfile=$( mktemp -t transferXXX ); if tty -s; then basefile=$(basename "$1" | sed -e 's/[^a-zA-Z0-9._-]/-/g'); curl --progress-bar --upload-file "$1" "https://transfer.sh/$basefile" >> $tmpfile; else curl --progress-bar --upload-file "-" "https://transfer.sh/$1" >> $tmpfile ; fi; cat $tmpfile; rm -f $tmpfile; }
 
-    source ~/.zsh_plugins.sh
-    bindkey '^[[A' history-substring-search-up
-    bindkey '^[[B' history-substring-search-down
+function yta() {
+    mpv --ytdl-format=bestaudio ytdl://ytsearch:"$@"
+}
 
-    #GPG
-    export GPG_TTY=$(tty)
+source ~/.zsh_plugins.sh
+bindkey '^[[A' history-substring-search-up
+bindkey '^[[B' history-substring-search-down
+
+#GPG
+export GPG_TTY=$(tty)

@@ -35,6 +35,7 @@ if dein#load_state('~/.cache/dein')
     call dein#add('ryanoasis/vim-devicons')
     call dein#add('neomake/neomake')
     call dein#add('sbdchd/neoformat')
+    call dein#add('mboughaba/i3config.vim')
 
 
     call dein#end()
@@ -59,9 +60,6 @@ let g:deoplete#sources.gitcommit=['github']
 let g:airline_powerline_fonts = 1
 
 "Neoformat configuration
-let g:neoformat_basic_format_align = 1
-let g:neoformat_basic_format_retab = 1
-let g:neoformat_basic_format_trim = 1
 let g:neoformat_enabled_python = ['yapf', 'isort']
 augroup fmt
     autocmd!
