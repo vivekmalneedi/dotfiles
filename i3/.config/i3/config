@@ -133,8 +133,6 @@ bindsym $mod+Shift+0 move container to workspace $ws10
 bindsym $mod+Shift+c reload
 # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
 bindsym $mod+Shift+r restart
-# exit i3 (logs you out of your X session)
-bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
 
 # resize window (you can also use the mouse for that)
 mode "resize" {
@@ -173,7 +171,7 @@ bindsym $mod+r mode "resize"
 exec_always --no-startup-id $HOME/.config/polybar/launch.sh
 
 #additions
-exec --no-startup-id compton &
+exec --no-startup-id compton
 for_window [class="^.*"] border pixel 1
 bindsym XF86AudioRaiseVolume exec --no-startup-id amixer sset Master -q 5%+
 bindsym XF86AudioLowerVolume exec --no-startup-id amixer sset Master -q 5%-
@@ -183,5 +181,7 @@ bindsym XF86MonBrightnessDown exec --no-startup-id light -U 5 # decrease screen 
 bindsym $mod+Return exec urxvtcd
 bindsym $mod+d exec --no-startup-id rofi -font "mono 24" -show run
 exec --no-startup-id feh --bg-scale $HOME/Pictures/wallhaven-440766_2560x1440.png
-exec --no-startup-id xss-lock -- i3lock -n -i $HOME/.config/i3/lockscreen.png &
+exec --no-startup-id xss-lock -- i3lock -n -i $HOME/.config/i3/lockscreen.png
 exec --no-startup-id /usr/local/bin/grive-sync.sh sync googledrive
+bindsym $mod+Shift+e exec $HOME/.config/rofi-power/rofi-power 
+bindsym $mod+m exec --no-startup-id rofi-mpc
