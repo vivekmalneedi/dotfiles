@@ -40,14 +40,17 @@ export QT_AUTO_SCREEN_SCALE_FACTOR=1
 export XDG_RUNTIME_DIR="/run/user/$UID"
 export DBUS_SESSION_BUS_ADDRESS="unix:path=${XDG_RUNTIME_DIR}/bus"
 alias xmerge='xrdb -merge ~/.Xresources'
-alias aupdate='antibody bundle < ~/.zsh_plugins.txt > ~/.zsh_plugins.sh'
+alias abupdate='antibody bundle < ~/.zsh_plugins.txt > ~/.zsh_plugins.sh'
+alias aupdate='antibody update'
 alias keil='wine "C:\Keil\UV4\UV4.exe"'
 alias pakku='sudo pakku'
 alias ranger='ranger --choosedir=$HOME/.rangerdir; LASTDIR=`cat $HOME/.rangerdir`; cd "$LASTDIR"'
 alias vim='nvim'
 alias vi='nvim'
+alias gpucheck='cat /proc/acpi/bbswitch'
+alias gpuoff='sudo tee /proc/acpi/bbswitch <<<OFF'
 export TERMINAL="urxvt"
-export IDF_PATH=~/.esp-idf-sdk
+export IDF_PATH=~/esp-idf
 export PATH="/usr/lib/ccache/bin/:$PATH"
 
 #transfer

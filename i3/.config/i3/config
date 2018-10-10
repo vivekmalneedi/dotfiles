@@ -173,11 +173,8 @@ bindsym $mod+r mode "resize"
 exec_always --no-startup-id $HOME/.config/polybar/launch.sh
 
 #additions
-#new_window pixel 1
-#default_border pixel 0
-#default_floating_border none
 exec --no-startup-id compton &
-for_window [class="^.*"] border pixel 0
+for_window [class="^.*"] border pixel 1
 bindsym XF86AudioRaiseVolume exec --no-startup-id amixer sset Master -q 5%+
 bindsym XF86AudioLowerVolume exec --no-startup-id amixer sset Master -q 5%-
 bindsym XF86AudioMute exec --no-startup-id amixer sset Master toggle
@@ -188,4 +185,3 @@ bindsym $mod+d exec --no-startup-id rofi -font "mono 24" -show run
 exec --no-startup-id feh --bg-scale $HOME/Pictures/wallhaven-440766_2560x1440.png
 exec --no-startup-id xss-lock -- i3lock -n -i $HOME/.config/i3/lockscreen.png &
 exec --no-startup-id /usr/local/bin/grive-sync.sh sync googledrive
-exec --no-startup-id i3-battery-popup -n
