@@ -62,8 +62,15 @@ function yta() {
 }
 
 source ~/.zsh_plugins.sh
+
+#keybinds
 bindkey '^[[A' history-substring-search-up
 bindkey '^[[B' history-substring-search-down
+bindkey "^[[1;5C" forward-word
+bindkey "^[[1;5D" backward-word
+bindkey "^[[1;2C" forward-word
+bindkey "^[[1;2D" backward-word
+bindkey "\e[3~" delete-char
 
 #GPG
 export GPG_TTY=$(tty)
