@@ -8,6 +8,10 @@ exec --no-startup-id xss-lock -- i3lock -n -i $HOME/.config/i3/lockscreen.png
 exec --no-startup-id /usr/local/bin/grive-sync.sh sync googledrive
 exec --no-startup-id compton
 
+#application autostart
+exec --no-startup-id i3-msg 'workspace 1; exec --no-startup-id firefox'
+exec --no-startup-id i3-msg 'workspace 0; exec --no-startup-id slack; workspace 1'
+
 #keybinds and custom settings
 for_window [class="^.*"] border pixel 1
 bindsym XF86AudioRaiseVolume exec --no-startup-id amixer sset Master -q 5%+
