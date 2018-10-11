@@ -10,7 +10,7 @@ exec --no-startup-id compton
 
 #application autostart
 exec --no-startup-id i3-msg 'workspace 1; exec --no-startup-id firefox'
-exec --no-startup-id i3-msg 'workspace 0; exec --no-startup-id slack; workspace 1'
+exec --no-startup-id i3-msg 'workspace 10; exec --no-startup-id slack; workspace 1'
 
 #keybinds and custom settings
 for_window [class="^.*"] border pixel 1
@@ -23,6 +23,9 @@ bindsym $mod+Return exec urxvtcd
 bindsym $mod+d exec --no-startup-id rofi -font "mono 24" -show run
 bindsym $mod+Shift+e exec $HOME/.config/rofi-power/rofi-power
 bindsym $mod+m exec --no-startup-id rofi-mpc
+workspace_auto_back_and_forth yes
+bindsym $mod+Shift+minus move scratchpad
+bindsym $mod+minus scratchpad show
 
 # default settings
 set $mod Mod1
