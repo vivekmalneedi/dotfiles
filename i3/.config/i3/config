@@ -9,8 +9,8 @@ exec --no-startup-id /usr/local/bin/grive-sync.sh sync googledrive
 exec --no-startup-id compton
 
 #application autostart
-exec --no-startup-id i3-msg 'workspace 1; exec --no-startup-id firefox'
 exec --no-startup-id i3-msg 'workspace 10; exec --no-startup-id slack; workspace 1'
+exec --no-startup-id i3-msg 'workspace 1; exec --no-startup-id firefox'
 
 #keybinds and custom settings
 for_window [class="^.*"] border pixel 1

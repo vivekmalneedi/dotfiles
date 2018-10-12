@@ -1,18 +1,12 @@
-# Lines configured by zsh-newuser-install
 HISTFILE=~/.histfile
 HISTSIZE=1000
 SAVEHIST=1000
-#setopt autocd extendedglob nomatch
 bindkey -e
-# End of lines configured by zsh-newuser-install
-# The following lines were added by compinstall
 zstyle :compinstall filename '/home/vivek/.zshrc'
-
 autoload -Uz compinit
 compinit
-# End of lines added by compinstall
-# source ~/.zprofile
 
+# colored ouput
 alias ls='ls --color'
 alias grep='grep --color=auto'
 export LESS=-R
@@ -33,6 +27,7 @@ man() {
         command man "$@"
 }
 
+#variables
 export VISUAL="nvim"
 export QT_AUTO_SCREEN_SCALE_FACTOR=1
 #export GDK_SCALE=1.75
@@ -45,15 +40,17 @@ alias aupdate='antibody update'
 alias keil='wine "C:\Keil\UV4\UV4.exe"'
 alias pakku='sudo pakku'
 alias ranger='ranger --choosedir=$HOME/.rangerdir; LASTDIR=`cat $HOME/.rangerdir`; cd "$LASTDIR"'
-alias vim='nvim'
-alias vi='nvim'
 alias gpucheck='cat /proc/acpi/bbswitch'
 alias gpuoff='sudo tee /proc/acpi/bbswitch <<<OFF'
 export TERMINAL="urxvt"
 export IDF_PATH=~/esp-idf
 export PATH="/usr/lib/ccache/bin/:$PATH"
+export GPG_TTY=$(tty)
+export ENHANCD_FILTER=fzy
 
-#transfer
+source ~/.zsh_plugins.sh
+
+#functions
 transfer() { if [ $# -eq 0 ]; then echo -e "No arguments specified. Usage:\necho transfer /tmp/test.md\ncat /tmp/test.md | transfer test.md"; return 1; fi
     tmpfile=$( mktemp -t transferXXX ); if tty -s; then basefile=$(basename "$1" | sed -e 's/[^a-zA-Z0-9._-]/-/g'); curl --progress-bar --upload-file "$1" "https://transfer.sh/$basefile" >> $tmpfile; else curl --progress-bar --upload-file "-" "https://transfer.sh/$1" >> $tmpfile ; fi; cat $tmpfile; rm -f $tmpfile; }
 
@@ -61,7 +58,10 @@ function yta() {
     mpv --ytdl-format=bestaudio ytdl://ytsearch:"$@"
 }
 
-source ~/.zsh_plugins.sh
+function pname() {
+    ps -p "$@" -o command
+}
+
 
 #keybinds
 bindkey '^[[A' history-substring-search-up
@@ -71,6 +71,3 @@ bindkey "^[[1;5D" backward-word
 bindkey "^[[1;2C" forward-word
 bindkey "^[[1;2D" backward-word
 bindkey "\e[3~" delete-char
-
-#GPG
-export GPG_TTY=$(tty)

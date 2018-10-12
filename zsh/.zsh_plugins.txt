@@ -5,3 +5,12 @@ zsh-users/zsh-completions
 zsh-users/zsh-autosuggestions
 zsh-users/zsh-syntax-highlighting
 zsh-users/zsh-history-substring-search
+oldratlee/hacker-quotes
+marzocchi/zsh-notify
+hcgraf/zsh-sudo
+molovo/tipz
+peterhurford/git-aliases.zsh
+rapgenic/zsh-git-complete-urls
+desyncr/auto-ls
+b4b4r07/enhancd
+Tarrasch/zsh-command-not-found
