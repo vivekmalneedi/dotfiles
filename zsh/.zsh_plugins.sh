@@ -14,3 +14,4 @@ source /home/vivek/.cache/antibody/https-COLON--SLASH--SLASH-github.com-SLASH-ra
 source /home/vivek/.cache/antibody/https-COLON--SLASH--SLASH-github.com-SLASH-desyncr-SLASH-auto-ls/auto-ls.zsh
 source /home/vivek/.cache/antibody/https-COLON--SLASH--SLASH-github.com-SLASH-b4b4r07-SLASH-enhancd/init.sh
 source /home/vivek/.cache/antibody/https-COLON--SLASH--SLASH-github.com-SLASH-Tarrasch-SLASH-zsh-command-not-found/command-not-found.plugin.zsh
+source /home/vivek/.cache/antibody/https-COLON--SLASH--SLASH-github.com-SLASH-twang817-SLASH-zsh-clipboard/clipboard.plugin.zsh
