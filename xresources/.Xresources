@@ -9,8 +9,8 @@ Xft.rgba: rgb
 URxvt.termName: rxvt-unicode
 URxvt.scrollBar: false
 URxvt.transparent: false
-URxvt.font: xft: SauceCodePro Nerd Font Mono:style=Regular:pixelsize=24, xft: Source Code Pro for Powerline:style=Regular:pixelsize=24, xft: DejaVuSansMono Nerd Font:pixelsize=24
-URxvt.boldFont: xft: SauceCodePro Nerd Font Mono:style=Bold:pixelsize=24, xft: Source Code Pro for Powerline:style=Bold:pixelsize=24, xft: DejaVuSansMono Nerd Font:style=Bold:pixelsize=24
+URxvt.font: xft: SauceCodePro Nerd Font Mono:style=Regular:pixelsize=16, xft: Source Code Pro for Powerline:style=Regular:pixelsize=16, xft: DejaVuSansMono Nerd Font:pixelsize=16
+URxvt.boldFont: xft: SauceCodePro Nerd Font Mono:style=Bold:pixelsize=16, xft: Source Code Pro for Powerline:style=Bold:pixelsize=16, xft: DejaVuSansMono Nerd Font:style=Bold:pixelsize=16
 URxvt.letterSpace: -1
 URxvt.saveLines: 1000000
 URxvt.internalBorder:  0
