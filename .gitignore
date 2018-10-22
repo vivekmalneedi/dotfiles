@@ -4,3 +4,4 @@ mpd/.config/mpd/pid
 *.log
 ncmpcpp/.ncmpcpp/art.sh
 ncmpcpp/.ncmpcpp/artconfig
+*.pyc
