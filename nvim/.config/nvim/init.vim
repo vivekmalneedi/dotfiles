@@ -36,6 +36,7 @@ if dein#load_state('~/.cache/dein')
     call dein#add('neomake/neomake')
     call dein#add('sbdchd/neoformat')
     call dein#add('mboughaba/i3config.vim')
+    call dein#add('chrisbra/colorizer')
 
 
     call dein#end()

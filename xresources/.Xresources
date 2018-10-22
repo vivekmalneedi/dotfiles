@@ -1,4 +1,4 @@
-!Xft.dpi: 221
+Xft.dpi: 132
 Xft.autohint: 0
 Xft.lcdfilter:  lcddefault
 Xft.hintstyle:  hintslight
@@ -9,8 +9,8 @@ Xft.rgba: rgb
 URxvt.termName: rxvt-unicode
 URxvt.scrollBar: false
 URxvt.transparent: false
-URxvt.font: xft: SauceCodePro Nerd Font Mono:style=Regular:pixelsize=16, xft: Source Code Pro for Powerline:style=Regular:pixelsize=16, xft: DejaVuSansMono Nerd Font:pixelsize=16
-URxvt.boldFont: xft: SauceCodePro Nerd Font Mono:style=Bold:pixelsize=16, xft: Source Code Pro for Powerline:style=Bold:pixelsize=16, xft: DejaVuSansMono Nerd Font:style=Bold:pixelsize=16
+URxvt.font: xft: SauceCodePro Nerd Font Mono:style=Regular:pixelsize=24, xft: Source Code Pro for Powerline:style=Regular:pixelsize=24, xft: DejaVuSansMono Nerd Font:pixelsize=24
+URxvt.boldFont: xft: SauceCodePro Nerd Font Mono:style=Bold:pixelsize=24, xft: Source Code Pro for Powerline:style=Bold:pixelsize=24, xft: DejaVuSansMono Nerd Font:style=Bold:pixelsize=24
 URxvt.letterSpace: -1
 URxvt.saveLines: 1000000
 URxvt.internalBorder:  0
@@ -66,7 +66,7 @@ rofi.color-active: #141021, #c05c47, #312842, #c05c47, #ffeefc
 rofi.color-urgent: #141021, #e4b226, #312842, #e4b226, #ffeefc
 rofi.width: 800
 rofi.padding: 50
-rofi.font: PragmataPro Nerd Font 18
+rofi.font: PragmataPro Nerd Font 24
 rofi.bw: 3
 rofi.separator-style: solid
 rofi.hide-scrollbar: true

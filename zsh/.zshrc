@@ -30,8 +30,8 @@ man() {
 #variables
 export VISUAL="nvim"
 export QT_AUTO_SCREEN_SCALE_FACTOR=1
-#export GDK_SCALE=1.75
-#export GDK_DPI_SCALE=1.5
+export GDK_SCALE=2
+export GDK_DPI_SCALE=1.5
 export XDG_RUNTIME_DIR="/run/user/$UID"
 export DBUS_SESSION_BUS_ADDRESS="unix:path=${XDG_RUNTIME_DIR}/bus"
 alias xmerge='xrdb -merge ~/.Xresources'
@@ -42,6 +42,8 @@ alias pakku='sudo pakku'
 alias ranger='ranger --choosedir=$HOME/.rangerdir; LASTDIR=`cat $HOME/.rangerdir`; cd "$LASTDIR"'
 alias gpucheck='cat /proc/acpi/bbswitch'
 alias gpuoff='sudo tee /proc/acpi/bbswitch <<<OFF'
+alias lstrash='ls ~/.local/share/Trash/files'
+alias emptytrash='rm -r ~/.local/share/Trash/files/*'
 export TERMINAL="urxvt"
 export IDF_PATH=~/esp-idf
 export PATH="/usr/lib/ccache/bin/:$PATH"
