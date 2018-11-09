@@ -10,6 +10,8 @@ set shiftwidth=4        " Indentation amount for < and > commands.i
 set nojoinspaces        " Prevents inserting two spaces after punctuation on a join (J)
 set ignorecase          " Make searching case insensitive
 set smartcase           " ... unless th e query has capital letters.<Paste>
+"set background=dark
+"icm split
 
 "dein: plugin manager
 if &compatible
@@ -37,7 +39,9 @@ if dein#load_state('~/.cache/dein')
     call dein#add('sbdchd/neoformat')
     call dein#add('mboughaba/i3config.vim')
     call dein#add('chrisbra/colorizer')
-
+    call dein#add('mhartington/oceanic-next')
+    call dein#add('scrooloose/nerdcommenter')
+    call dein#add('jiangmiao/auto-pairs')
 
     call dein#end()
     call dein#save_state()
@@ -45,6 +49,9 @@ endif
 
 filetype plugin indent on
 syntax enable
+let g:oceanic_next_terminal_bold = 1
+let g:oceanic_next_terminal_italic = 1
+colorscheme OceanicNext
 
 "plugin specific settings
 "call dein#update()
@@ -59,6 +66,7 @@ autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
 let g:chromatica#responsive_mode=1
 let g:deoplete#sources.gitcommit=['github']
 let g:airline_powerline_fonts = 1
+let g:airline_theme='oceanicnext'
 
 "Neoformat configuration
 let g:neoformat_enabled_python = ['yapf', 'isort']
@@ -73,3 +81,9 @@ if !exists('g:airline_symbols')
 endif
 let g:airline_symbols.linenr = '' "options: '␤' '¶'
 
+"NerdCommenter
+let g:NERDSpaceDelims = 1
+let g:NERDCompactSexyComs = 1
+let g:NERDDefaultAlign = 'left'
+let g:NERDCommentEmptyLines = 1
+let g:NERDTrimTrailingWhitespace = 1

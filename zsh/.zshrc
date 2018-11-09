@@ -6,6 +6,14 @@ zstyle :compinstall filename '/home/vivek/.zshrc'
 autoload -Uz compinit
 compinit
 
+#options
+setopt autocd
+setopt correct
+setopt correctall
+setopt globdots
+setopt histignoredups
+setopt noclobber
+
 # colored ouput
 alias ls='ls --color'
 alias grep='grep --color=auto'
@@ -29,6 +37,7 @@ man() {
 
 #variables
 export VISUAL="nvim"
+export EDITOR="nvim"
 export QT_AUTO_SCREEN_SCALE_FACTOR=1
 export GDK_SCALE=2
 export GDK_DPI_SCALE=1.5
@@ -45,10 +54,11 @@ alias gpuoff='sudo tee /proc/acpi/bbswitch <<<OFF'
 alias lstrash='ls ~/.local/share/Trash/files'
 alias emptytrash='rm -r ~/.local/share/Trash/files/*'
 export TERMINAL="urxvt"
-export IDF_PATH=~/esp-idf
+export IDF_PATH=~/esp/esp-idf
 export PATH="/usr/lib/ccache/bin/:$PATH"
 export GPG_TTY=$(tty)
 export ENHANCD_FILTER=fzy
+export FZF_DEFAULT_COMMAND='fd -H -E "*{.git,.mozilla,misc,windows,.cache}*" -t f -t l -t d'
 
 source ~/.zsh_plugins.sh
 

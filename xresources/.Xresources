@@ -16,7 +16,7 @@ URxvt.saveLines: 1000000
 URxvt.internalBorder:  0
 
 !URxvt.keysym.Shift-Control-V: perl:clipboard:paste
-URxvt.iso14755: True
+URxvt.iso14755: False
 URxvt.perl-ext-common: default,matcher
 URxvt.url-launcher: firefox
 !URxvt.keysym.M-u: perl:matcher:selec

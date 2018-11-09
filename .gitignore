@@ -5,3 +5,5 @@ mpd/.config/mpd/pid
 ncmpcpp/.ncmpcpp/art.sh
 ncmpcpp/.ncmpcpp/artconfig
 *.pyc
+beets/
+zsh/.zsh_plugins.sh
