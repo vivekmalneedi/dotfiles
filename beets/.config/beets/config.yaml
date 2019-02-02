@@ -1,1 +1,15 @@
-plugins: inline convert web fetchart embedart acousticbrainz scrub thumbnails mpdupdate chroma fromfilename edit
+plugins: acousticbrainz chroma discogs fromfilename edit embedart fetchart lastgenre lyrics badfiles thumbnails scrub popularity info smartplaylist mpdupdate gmusic mpdstats
+
+discogs:
+    user_token: zhLwLAKFuiQFfSFwZVRVJEihifEMoQuetIaDvCml
+
+smartplaylist:
+    relative_to: ~/Music
+    playlist_dir: ~/.config/mpd/playlists
+    playlists:
+        - name: all.m3u
+          query: ^artist:Asthenic ^artist:"Artic Empire" ^artist:MrMoMMusic artist+
+
+gmusic:
+    email: vivekmalneedi@gmail.com
+    password: sgdakukqruloyegn

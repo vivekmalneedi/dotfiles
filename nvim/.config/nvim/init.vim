@@ -10,8 +10,6 @@ set shiftwidth=4        " Indentation amount for < and > commands.i
 set nojoinspaces        " Prevents inserting two spaces after punctuation on a join (J)
 set ignorecase          " Make searching case insensitive
 set smartcase           " ... unless th e query has capital letters.<Paste>
-"set background=dark
-"icm split
 
 "dein: plugin manager
 if &compatible
@@ -21,27 +19,31 @@ endif
 " append to runtime path
 set rtp+=/usr/share/vim/vimfiles
 if dein#load_state('~/.cache/dein')
+    "general
     call dein#begin('~/.cache/dein')
     call dein#add('~/.cache/dein')
     call dein#add('vim-airline/vim-airline')
-    call dein#add('Shougo/deoplete.nvim')
-    call dein#add('zchee/deoplete-clang')
     call dein#add('roxma/nvim-yarp')
-    call dein#add('zchee/deoplete-jedi')
-    call dein#add('zchee/deoplete-zsh')
-    call dein#add('tpope/vim-fugitive')
-    call dein#add('tpope/vim-rhubarb')
-    call dein#add('SevereOverfl0w/deoplete-github')
-    call dein#add('Shougo/neco-vim')
-    call dein#add('arakashic/chromatica.nvim')
+    call dein#add('roxma/vim-hug-neovim-rpc')
     call dein#add('ryanoasis/vim-devicons')
-    call dein#add('neomake/neomake')
-    call dein#add('sbdchd/neoformat')
     call dein#add('mboughaba/i3config.vim')
-    call dein#add('chrisbra/colorizer')
-    call dein#add('mhartington/oceanic-next')
     call dein#add('scrooloose/nerdcommenter')
     call dein#add('jiangmiao/auto-pairs')
+
+    " Completion
+    call dein#add('w0rp/ale')
+    call dein#add('Shougo/deoplete.nvim') 
+    call dein#add('Shougo/neco-syntax')
+
+
+    " git/github
+    call dein#add('tpope/vim-fugitive')
+    call dein#add('tpope/vim-rhubarb')
+
+    " colors
+    call dein#add('chrisbra/colorizer')
+    call dein#add('mhartington/oceanic-next')
+    call dein#add('arakashic/chromatica.nvim')
 
     call dein#end()
     call dein#save_state()
@@ -53,27 +55,13 @@ let g:oceanic_next_terminal_bold = 1
 let g:oceanic_next_terminal_italic = 1
 colorscheme OceanicNext
 
-"plugin specific settings
-"call dein#update()
-call neomake#configure#automake('nrwi', 500)
-let g:deoplete#enable_at_startup = 1
-let g:deoplete#sources#clang#libclang_path = "/usr/lib/libclang.so"
-let g:deoplete#sources#clang#clang_header = "/usr/lib/clang"
-let g:deoplete#sources = {}
 " deoplete tab-complete
+let g:deoplete#enable_at_startup = 1
 inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
 autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
 let g:chromatica#responsive_mode=1
-let g:deoplete#sources.gitcommit=['github']
 let g:airline_powerline_fonts = 1
 let g:airline_theme='oceanicnext'
-
-"Neoformat configuration
-let g:neoformat_enabled_python = ['yapf', 'isort']
-augroup fmt
-    autocmd!
-    autocmd BufWritePre * undojoin | Neoformat
-augroup END
 
 "Airline Customization
 if !exists('g:airline_symbols')
@@ -87,3 +75,11 @@ let g:NERDCompactSexyComs = 1
 let g:NERDDefaultAlign = 'left'
 let g:NERDCommentEmptyLines = 1
 let g:NERDTrimTrailingWhitespace = 1
+
+"ale
+let g:ale_completion_enabled = 0
+let g:ale_lint_on_text_changed = 'never'
+let g:ale_fix_on_save = 1
+let g:airline#extensions#ale#enabled = 1
+let b:ale_fixers = {'python': ['yapf'], 'c++': ['clang-format']}
+let b:ale_linters = {'python': ['pyls']}
