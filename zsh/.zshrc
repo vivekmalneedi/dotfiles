@@ -53,12 +53,13 @@ alias gpucheck='cat /proc/acpi/bbswitch'
 alias gpuoff='sudo tee /proc/acpi/bbswitch <<<OFF'
 alias lstrash='ls ~/.local/share/Trash/files'
 alias emptytrash='rm -r ~/.local/share/Trash/files/*'
-export TERMINAL="urxvt"
+export TERMINAL="urxvtcd"
 export IDF_PATH=~/esp/esp-idf
 export PATH="/usr/lib/ccache/bin/:$PATH"
 export GPG_TTY=$(tty)
-export ENHANCD_FILTER=fzy
 export FZF_DEFAULT_COMMAND='fd -H -E "*{.git,.mozilla,misc,windows,.cache}*" -t f -t l -t d'
+export AUTO_LS_COMMANDS=(ls)
+alias f='nvim $(fzf)'
 
 source ~/.zsh_plugins.sh
 
@@ -70,8 +71,30 @@ function yta() {
     mpv --ytdl-format=bestaudio ytdl://ytsearch:"$@"
 }
 
+function mpy() {
+    mpv --ytdl-format=bestaudio --loop "$@"
+}
+
 function pname() {
     ps -p "$@" -o command
+}
+
+function decode() {
+    echo "$@" | base64 --decode
+}
+
+# Codi
+# Usage: codi [filetype] [filename]
+function codi() {
+  local syntax="${1:-python}"
+  shift
+  nvim -c \
+    "let g:startify_disable_at_vimenter = 1 |\
+    set bt=nofile ls=0 noru nonu nornu |\
+    hi ColorColumn ctermbg=NONE |\
+    hi VertSplit ctermbg=NONE |\
+    hi NonText ctermfg=0 |\
+    Codi $syntax" "$@"
 }
 
 

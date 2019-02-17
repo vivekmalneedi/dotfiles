@@ -1,4 +1,4 @@
-plugins: acousticbrainz chroma discogs fromfilename edit embedart fetchart lastgenre lyrics badfiles thumbnails scrub popularity info smartplaylist mpdupdate gmusic mpdstats
+plugins: acousticbrainz chroma discogs fromfilename edit embedart fetchart lastgenre lyrics badfiles thumbnails scrub popularity info smartplaylist mpdupdate gmusic mpdstats mbsync mbcollection mbsubmit replaygain web
 
 discogs:
     user_token: zhLwLAKFuiQFfSFwZVRVJEihifEMoQuetIaDvCml
@@ -8,8 +8,19 @@ smartplaylist:
     playlist_dir: ~/.config/mpd/playlists
     playlists:
         - name: all.m3u
-          query: ^artist:Asthenic ^artist:"Artic Empire" ^artist:MrMoMMusic artist+
+          query: 'artist+'
 
 gmusic:
     email: vivekmalneedi@gmail.com
     password: sgdakukqruloyegn
+
+musicbrainz:
+    user: devoidoflife
+    pass: vmE347m*L35&
+
+acoustid:
+    apikey: 6EyKqr5GFZ
+
+replaygain:
+    auto: no
+    backend: gstreamer

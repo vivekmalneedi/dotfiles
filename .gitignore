@@ -1,6 +1,8 @@
 mpd/.config/mpd/playlists/
 mpd/.config/mpd/mpd.db
 mpd/.config/mpd/pid
+mpd/.config/mpd/state
+mpd/.config/mpd/sticker.sql
 *.log
 ncmpcpp/.ncmpcpp/art.sh
 ncmpcpp/.ncmpcpp/artconfig

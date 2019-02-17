@@ -12,7 +12,6 @@ molovo/tipz
 peterhurford/git-aliases.zsh
 rapgenic/zsh-git-complete-urls
 desyncr/auto-ls
-b4b4r07/enhancd
 Tarrasch/zsh-command-not-found
 twang817/zsh-clipboard
 andrewferrier/fzf-z
