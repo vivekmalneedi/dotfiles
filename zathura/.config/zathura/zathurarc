@@ -1,0 +1,4 @@
+set selection-clipboard clipboard
+set window-title-basename true
+set statusbar-basename true
+set font 'monospace normal 3'

@@ -9,3 +9,4 @@ ncmpcpp/.ncmpcpp/artconfig
 *.pyc
 beets/
 zsh/.zsh_plugins.sh
+nvim/.config/nvim/.netrwhist

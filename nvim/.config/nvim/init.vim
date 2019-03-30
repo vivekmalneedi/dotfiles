@@ -34,14 +34,17 @@ if dein#load_state('~/.cache/dein')
     call dein#add('roxma/nvim-yarp')
     call dein#add('roxma/vim-hug-neovim-rpc')
     call dein#add('scrooloose/nerdcommenter') "commenting
-    "call dein#add('jiangmiao/auto-pairs') bracket pairing
     call dein#add('Konfekt/FastFold')
     call dein#add('farmergreg/vim-lastplace') "open to previous position
+    call dein#add('cloudhead/neovim-fuzzy')
 
     " UI
     call dein#add('vim-airline/vim-airline')
     call dein#add('ryanoasis/vim-devicons')
     call dein#add('metakirby5/codi.vim')
+    call dein#add('easymotion/vim-easymotion') "new movement motions
+    call dein#add('scrooloose/nerdtree')
+    call dein#add('Xuyuanp/nerdtree-git-plugin')
 
     " Completion
     call dein#add('w0rp/ale') "linting/fixing
@@ -60,10 +63,12 @@ if dein#load_state('~/.cache/dein')
     call dein#add('Shougo/deoplete-clangx')
     call dein#add('Shougo/neosnippet.vim')
     call dein#add('Shougo/neosnippet-snippets')
+    call dein#add('jiangmiao/auto-pairs')
 
     " git/github
     call dein#add('tpope/vim-fugitive') "git extension
     call dein#add('tpope/vim-rhubarb') "github extension
+    call dein#add('airblade/vim-gitgutter') "adds git diff
 
     " colors
     call dein#add('chrisbra/colorizer') "converts color codes to colors
@@ -75,26 +80,32 @@ if dein#load_state('~/.cache/dein')
     call dein#save_state()
 endif
 
+"general
+nnoremap <C-p> :FuzzyOpen<CR>
+
 "Syntax Highlighting
 filetype plugin indent on
 syntax enable
 let g:oceanic_next_terminal_bold = 1
 let g:oceanic_next_terminal_italic = 1
 colorscheme OceanicNext
+let g:chromatica#responsive_mode=1
 
 " deoplete tab-complete
 let g:deoplete#enable_at_startup = 1
 inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
 autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
-let g:chromatica#responsive_mode=1
-let g:airline_powerline_fonts = 1
-let g:airline_theme='oceanicnext'
 
 "Airline Customization
 if !exists('g:airline_symbols')
     let g:airline_symbols = {}
 endif
 let g:airline_symbols.linenr = '' "options: '␤' '¶'
+let g:airline_powerline_fonts = 1
+let g:airline_theme='oceanicnext'
+let g:airline#extensions#tabline#enabled = 1
+map <C-j> :bn<CR>
+map <C-k> :bp<CR>
 
 "NerdCommenter
 let g:NERDSpaceDelims = 1
@@ -144,3 +155,32 @@ smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
 if has('conceal')
   set conceallevel=2 concealcursor=niv
 endif
+
+"Nerdtree
+autocmd StdinReadPre * let s:std_in=1
+autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+map <C-n> :NERDTreeToggle<CR>
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+let NERDTreeQuitOnOpen = 1
+let NERDTreeAutoDeleteBuffer = 1
+"let NERDTreeMinimalUI = 1
+let NERDTreeDirArrows = 1
+
+" NERDTress File highlighting
+function! NERDTreeHighlightFile(extension, fg, bg, guifg, guibg)
+ exec 'autocmd filetype nerdtree highlight ' . a:extension .' ctermbg='. a:bg .' ctermfg='. a:fg .' guibg='. a:guibg .' guifg='. a:guifg
+ exec 'autocmd filetype nerdtree syn match ' . a:extension .' #^\s\+.*'. a:extension .'$#'
+endfunction
+call NERDTreeHighlightFile('jade', 'green', 'none', 'green', '#151515')
+call NERDTreeHighlightFile('ini', 'yellow', 'none', 'yellow', '#151515')
+call NERDTreeHighlightFile('md', 'blue', 'none', '#3366FF', '#151515')
+call NERDTreeHighlightFile('yml', 'yellow', 'none', 'yellow', '#151515')
+call NERDTreeHighlightFile('config', 'yellow', 'none', 'yellow', '#151515')
+call NERDTreeHighlightFile('conf', 'yellow', 'none', 'yellow', '#151515')
+call NERDTreeHighlightFile('json', 'yellow', 'none', 'yellow', '#151515')
+call NERDTreeHighlightFile('html', 'yellow', 'none', 'yellow', '#151515')
+call NERDTreeHighlightFile('styl', 'cyan', 'none', 'cyan', '#151515')
+call NERDTreeHighlightFile('css', 'cyan', 'none', 'cyan', '#151515')
+call NERDTreeHighlightFile('coffee', 'Red', 'none', 'red', '#151515')
+call NERDTreeHighlightFile('js', 'Red', 'none', '#ffa500', '#151515')
+call NERDTreeHighlightFile('php', 'Magenta', 'none', '#ff00ff', '#151515')

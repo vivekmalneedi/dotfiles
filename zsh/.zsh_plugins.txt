@@ -8,10 +8,8 @@ zsh-users/zsh-history-substring-search
 oldratlee/hacker-quotes
 marzocchi/zsh-notify
 hcgraf/zsh-sudo
-molovo/tipz
 peterhurford/git-aliases.zsh
 rapgenic/zsh-git-complete-urls
 desyncr/auto-ls
 Tarrasch/zsh-command-not-found
 twang817/zsh-clipboard
-andrewferrier/fzf-z

@@ -1,26 +1,26 @@
 plugins: acousticbrainz chroma discogs fromfilename edit embedart fetchart lastgenre lyrics badfiles thumbnails scrub popularity info smartplaylist mpdupdate gmusic mpdstats mbsync mbcollection mbsubmit replaygain web
 
 discogs:
-    user_token: zhLwLAKFuiQFfSFwZVRVJEihifEMoQuetIaDvCml
+  user_token: zhLwLAKFuiQFfSFwZVRVJEihifEMoQuetIaDvCml
 
 smartplaylist:
-    relative_to: ~/Music
-    playlist_dir: ~/.config/mpd/playlists
-    playlists:
-        - name: all.m3u
-          query: 'artist+'
+  relative_to: ~/Music
+  playlist_dir: ~/.config/mpd/playlists
+  playlists:
+    - name: all.m3u
+      query: "artist+"
 
 gmusic:
-    email: vivekmalneedi@gmail.com
-    password: sgdakukqruloyegn
+  email: vivekmalneedi@gmail.com
+  password: sgdakukqruloyegn
 
 musicbrainz:
-    user: devoidoflife
-    pass: vmE347m*L35&
+  user: devoidoflife
+  pass: vmE347m*L35&
 
 acoustid:
-    apikey: 6EyKqr5GFZ
+  apikey: 6EyKqr5GFZ
 
 replaygain:
-    auto: no
-    backend: gstreamer
+  auto: no
+  backend: gstreamer

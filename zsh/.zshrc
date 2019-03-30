@@ -8,15 +8,12 @@ compinit
 
 #options
 setopt autocd
-setopt correct
-setopt correctall
 setopt globdots
 setopt histignoredups
 setopt noclobber
 
 # colored ouput
 alias ls='ls --color'
-alias grep='grep --color=auto'
 export LESS=-R
 export LESS_TERMCAP_mb=$'\E[1;31m'     # begin bold
 export LESS_TERMCAP_md=$'\E[1;36m'     # begin blink
@@ -53,13 +50,20 @@ alias gpucheck='cat /proc/acpi/bbswitch'
 alias gpuoff='sudo tee /proc/acpi/bbswitch <<<OFF'
 alias lstrash='ls ~/.local/share/Trash/files'
 alias emptytrash='rm -r ~/.local/share/Trash/files/*'
+alias clean='yay -Scc'
+alias yayu='yay --answerupgrade None --answeredit None --answerdiff None --answerclean None -Syu'
+alias find='fd'
+alias grep='rg'
+alias vi='nvim'
+alias vim='nvim'
 export TERMINAL="urxvtcd"
 export IDF_PATH=~/esp/esp-idf
 export PATH="/usr/lib/ccache/bin/:$PATH"
 export GPG_TTY=$(tty)
-export FZF_DEFAULT_COMMAND='fd -H -E "*{.git,.mozilla,misc,windows,.cache}*" -t f -t l -t d'
 export AUTO_LS_COMMANDS=(ls)
-alias f='nvim $(fzf)'
+alias f='cd $(fd -H -E "*{.git,.mozilla,misc,windows,.cache}*" -t f -t l -t d . '/home' | fzy)'
+alias n='nvim $(fd -H -E "*{.git,.mozilla,misc,windows,.cache}*" -t f -t l -t d . '/home' | fzy)'
+alias checkout='git checkout $(git branch | cut -c 3- | fzy)'
 
 source ~/.zsh_plugins.sh
 
@@ -95,6 +99,10 @@ function codi() {
     hi VertSplit ctermbg=NONE |\
     hi NonText ctermfg=0 |\
     Codi $syntax" "$@"
+}
+
+function pdfmerge() {
+  gs -dBATCH -dNOPAUSE -q -sDEVICE=pdfwrite -dPDFSETTINGS=/prepress -sOutputFile=$@
 }
 
 

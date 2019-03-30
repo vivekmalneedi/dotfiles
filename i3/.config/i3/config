@@ -17,11 +17,13 @@ exec --no-startup-id betterlockscreen -l
 assign [class="Thunderbird"] 6: 
 assign [class="Slack"] 10: 
 assign [instance="ncmpcpp"] 5: 
+assign [class="Caprine"] 9: 
 
 exec --no-startup-id thunderbird
 exec --no-startup-id "urxvtcd -name ncmpcpp -e ncmpcpp -S visualizer"
 exec --no-startup-id i3-msg 'workspace 1: ; exec --no-startup-id firefox'
 exec --no-startup-id slack
+exec --no-startup-id caprine
 
 #keybinds and custom settings
 bindsym XF86AudioRaiseVolume exec --no-startup-id "amixer sset Master -q 5%+
@@ -36,9 +38,9 @@ bindsym $mod+m exec --no-startup-id rofi-mpc
 bindsym $mod+Shift+minus move scratchpad
 bindsym $mod+minus scratchpad show
 bindsym $mod+c exec --no-startup-id "rofi -show calc -modi calc -no-show-match -no-sort"
-bindsym $mod+n exec --no-startup-id "urxvtcd -name Ranger -e ranger"
 bindsym $mod+x exec --no-startup-id "rofi -modi 'clipboard:greenclip print' -show clipboard -run-command '{cmd}'"
 exec --no-startup-id setxkbmap -option caps:escape
+bindsym $mod+n exec --no-startup-id $HOME/utils/scripts/addmusic.sh
 
 #settings
 for_window [class="^.*"] border pixel 1
@@ -53,7 +55,7 @@ set $ws5 "5: "
 set $ws6 "6: "
 set $ws7 "7"
 set $ws8 "8"
-set $ws9 "9"
+set $ws9 "9: "
 set $ws10 "10: "
 
 bar {
