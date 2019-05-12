@@ -1,4 +1,5 @@
 set selection-clipboard clipboard
 set window-title-basename true
 set statusbar-basename true
-set font 'monospace normal 3'
+set font 'Sauce Code Pro Mono 10'
+set default-bg '#073642'

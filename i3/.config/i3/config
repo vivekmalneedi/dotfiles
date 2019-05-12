@@ -1,11 +1,15 @@
+#gaps
+gaps inner 5
+gaps outer 0
+smart_gaps on
+
 #autostart
 exec --no-startup-id xrandr -s 2560x1440
 exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
 exec --no-startup-id nm-applet
-exec --no-startup-id feh --bg-scale $HOME/Pictures/wallhaven-440766_2560x1440.png
+exec --no-startup-id feh --bg-scale $HOME/Pictures/firewatch-1554245414451-2379.jpg
 exec --no-startup-id xss-lock -- betterlockscreen -l
-exec --no-startup-id /usr/local/bin/grive-sync.sh sync googledrive
-exec --no-startup-id compton
+exec --no-startup-id compton -b
 exec --no-startup-id beet mpdstats
 exec --no-startip-id redshift-gtk
 exec --no-startup-id caffeine
@@ -15,14 +19,13 @@ exec --no-startup-id betterlockscreen -l
 
 #application autostart
 assign [class="Thunderbird"] 6: 
-assign [class="Slack"] 10: 
+assign [instance="Slack"] 10: 
 assign [instance="ncmpcpp"] 5: 
 assign [class="Caprine"] 9: 
 
 exec --no-startup-id thunderbird
 exec --no-startup-id "urxvtcd -name ncmpcpp -e ncmpcpp -S visualizer"
 exec --no-startup-id i3-msg 'workspace 1: ; exec --no-startup-id firefox'
-exec --no-startup-id slack
 exec --no-startup-id caprine
 
 #keybinds and custom settings
@@ -31,13 +34,13 @@ bindsym XF86AudioLowerVolume exec --no-startup-id "amixer sset Master -q 5%-
 bindsym XF86AudioMute exec --no-startup-id "amixer sset Master toggle
 bindsym XF86MonBrightnessUp exec --no-startup-id light -A 5 # increase screen brightness
 bindsym XF86MonBrightnessDown exec --no-startup-id light -U 5 # decrease screen brightness
-bindsym $mod+Return exec urxvtcd
+bindsym $mod+Return exec alacritty
 bindsym $mod+d exec --no-startup-id rofi -show run
 bindsym $mod+Shift+e exec $HOME/.config/rofi-power/rofi-power
 bindsym $mod+m exec --no-startup-id rofi-mpc
 bindsym $mod+Shift+minus move scratchpad
 bindsym $mod+minus scratchpad show
-bindsym $mod+c exec --no-startup-id "rofi -show calc -modi calc -no-show-match -no-sort"
+bindsym $mod+c exec --no-startup-id rofi -show calc -modi calc -no-show-match -no-sort -calc-command "echo '{result}' | xclip -selection clipboard"
 bindsym $mod+x exec --no-startup-id "rofi -modi 'clipboard:greenclip print' -show clipboard -run-command '{cmd}'"
 exec --no-startup-id setxkbmap -option caps:escape
 bindsym $mod+n exec --no-startup-id $HOME/utils/scripts/addmusic.sh
@@ -60,21 +63,21 @@ set $ws10 "10: "
 
 bar {
     position top
-    font pango:SauceCodePro Nerd Font 12
+    font pango:SauceCodePro Nerd Font 9
     strip_workspace_numbers yes
-    separator_symbol "|"
+    separator_symbol " "
+    i3bar_command i3bar -t
     status_command py3status -c $HOME/.config/i3/i3status.conf
 
     colors {
-        background #141021
-        statusline #ffffff
-        separator #666666
+        background #00000000
+        statusline #ffffffff
 
-        focused_workspace  #4c7899 #285577 #ffffff
-        active_workspace   #333333 #5f676a #ffffff
-        inactive_workspace #333333 #222222 #888888
-        urgent_workspace   #2f343a #900000 #ffffff
-        binding_mode       #2f343a #900000 #ffffff
+        focused_workspace  #00000000 #00000000 #ffffff
+        active_workspace   #00000000 #00000000 #ffffff
+        inactive_workspace #00000000 #00000000 #888888
+        urgent_workspace   #00000000 #00000000 #ffffff
+        binding_mode       #00000000 #00000000 #ffffff
     }
 }
 

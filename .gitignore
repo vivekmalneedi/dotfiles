@@ -8,5 +8,6 @@ ncmpcpp/.ncmpcpp/art.sh
 ncmpcpp/.ncmpcpp/artconfig
 *.pyc
 beets/
+beets/.config/beets/library.db
 zsh/.zsh_plugins.sh
 nvim/.config/nvim/.netrwhist
