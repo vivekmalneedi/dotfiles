@@ -136,6 +136,7 @@ let b:ale_linters = {
       \'yaml': ['yamllint']}
 
 let g:ale_javascript_prettier_options = '--no-bracket-spacing'
+let g:ale_use_global_executables = 1
 
 "Snippets
 " Plugin key-mappings.

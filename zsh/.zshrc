@@ -72,8 +72,6 @@ alias yayu='yay --answerupgrade None --answeredit None --answerdiff None --answe
 alias yay='yay --editor nvim --editmenu --sudoloop'
 alias find='fd'
 alias grep='rg'
-alias vi='nvim'
-alias vim='nvim'
 export IDF_PATH=~/esp/esp-idf
 export PATH="/usr/lib/ccache/bin/:$PATH"
 export GPG_TTY=$(tty)
@@ -85,6 +83,7 @@ alias cp='advcp -g'
 alias mv='advmv -g'
 alias youtube-dl='youtube-dl -f best'
 alias mpy='mpv --ytdl-format=bestaudio --loop'
+alias clamscan='clamdscan --multiscan --fdpass'
 
 #functions
 transfer() { if [ $# -eq 0 ]; then echo -e "No arguments specified. Usage:\necho transfer /tmp/test.md\ncat /tmp/test.md | transfer test.md"; return 1; fi
@@ -146,16 +145,14 @@ zplugin light chrissicool/zsh-256color
 
 #general plugins
 zplugin ice lucid wait'0'
-zplugin light peterhurford/git-aliases.zsh
-zplugin ice lucid wait'0'
-zplugin light rapgenic/zsh-git-complete-urls
-zplugin ice lucid wait'0'
 zplugin light desyncr/auto-ls
 zplugin light Tarrasch/zsh-command-not-found #suggests command if not found
 zplugin ice lucid wait'0'
 zplugin light marzocchi/zsh-notify #notifications for long running programs
 zplugin ice lucid wait'0'
 zplugin light twang817/zsh-clipboard #cli clipboard interaction
+PS1="➜"
+zplugin ice lucid wait'!0' atload'clear'
 zplugin light denysdovhan/spaceship-prompt
 zplugin ice lucid wait'0'
 zplugin light hlissner/zsh-autopair
@@ -165,41 +162,58 @@ zplugin ice lucid wait'0'
 zplugin light oz/safe-paste
 zplugin ice make'!'
 zplugin light sei40kr/zsh-fast-alias-tips
+zplugin ice lucid wait'0'
+zplugin light zdharma/zui
+zplugin ice lucid wait'0'
+zplugin light zdharma/zplugin-crasis
 
 #git
-zplugin ice lucid wait'0' as"program" pick"bin/git-dsf"
+zplugin ice lucid wait'[[ -n ${ZLAST_COMMANDS[(r)gi*]} ]]' as"program" pick"bin/git-dsf"
 zplugin light zdharma/zsh-diff-so-fancy
-zplugin ice pick'init.zsh' blockf
+zplugin ice lucid wait'[[ -n ${ZLAST_COMMANDS[(r)gi*]} ]]' pick'init.zsh' blockf
 zplugin light laggardkernel/git-ignore
+zplugin ice lucid wait'[[ -n ${ZLAST_COMMANDS[(r)gi*]} ]]'
+zplugin light peterhurford/git-aliases.zsh
+zplugin ice lucid wait'[[ -n ${ZLAST_COMMANDS[(r)gi*]} ]]'
+zplugin light rapgenic/zsh-git-complete-urls
 
 #plugin aliases/settings
 alias gi="git-ignore"
+export CRASIS_THEME="zdharma-256"
 
 #OMZ
 zplugin ice lucid wait'0'
 zplugin snippet OMZ::plugins/archlinux/archlinux.plugin.zsh
-zplugin ice lucid wait'0' as'completion'
+zplugin ice lucid wait'0' as'completion' blockf
 zplugin snippet OMZ::plugins/ripgrep/_ripgrep
 zplugin ice lucid wait'0'
 zplugin snippet OMZ::plugins/systemd/systemd.plugin.zsh
 zplugin ice lucid wait'0'
 zplugin snippet OMZ::plugins/encode64/encode64.plugin.zsh
+zplugin ice lucid wait'0'
+zplugin snippet OMZ::plugins/screen/screen.plugin.zsh
+zplugin ice lucid wait'0'
+zplugin snippet OMZ::lib/completion.zsh
 
 # completion
-zplugin ice lucid wait'0'
+zplugin ice lucid wait'0' blockf
 zplugin light srijanshetty/zsh-pandoc-completion
-zplugin ice lucid wait'0'
+zplugin ice lucid wait'0' as'completion' blockf
 zplugin light zpm-zsh/ssh
-zplugin ice lucid wait'0' pick"_urls" as'completion'
+zplugin ice lucid wait'0' pick"_urls" as'completion' blockf
 zplugin light Valodim/zsh-_url-httplink
-zplugin ice lucid wait'0' pick'_pip' as'completion'
+zplugin ice lucid wait'0' pick'_pip' as'completion' blockf
 zplugin light srijanshetty/zsh-pip-completion
 zplugin ice lucid wait'0' atload'_zsh_autosuggest_start'
 zplugin light zsh-users/zsh-autosuggestions
-zplugin ice lucid wait'0'
+zplugin ice lucid wait'0' blockf
 zplugin light zsh-users/zsh-completions
 zplugin ice lucid wait'0'
 zplugin light zsh-users/zsh-history-substring-search
+zplugin ice lucid wait'0' blockf
+zplugin light fnoris/keybase-zsh-completion
+# zplugin ice lucid wait'0' blockf
+# zplugin snippet https://github.com/beetbox/beets/blob/master/extra/_beet
 
 zplugin ice lucid wait'1' atinit'zpcompinit; zpcdreplay'
 zplugin light zdharma/fast-syntax-highlighting

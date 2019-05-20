@@ -19,12 +19,12 @@ exec --no-startup-id betterlockscreen -l
 
 #application autostart
 assign [class="Thunderbird"] 6: 
-assign [instance="Slack"] 10: 
+#assign [instance="Slack"] 10: 
 assign [instance="ncmpcpp"] 5: 
 assign [class="Caprine"] 9: 
 
 exec --no-startup-id thunderbird
-exec --no-startup-id "urxvtcd -name ncmpcpp -e ncmpcpp -S visualizer"
+exec --no-startup-id "alacritty --class ncmpcpp -e 'ncmpcpp -S visualizer'"
 exec --no-startup-id i3-msg 'workspace 1: ; exec --no-startup-id firefox'
 exec --no-startup-id caprine
 
@@ -34,9 +34,9 @@ bindsym XF86AudioLowerVolume exec --no-startup-id "amixer sset Master -q 5%-
 bindsym XF86AudioMute exec --no-startup-id "amixer sset Master toggle
 bindsym XF86MonBrightnessUp exec --no-startup-id light -A 5 # increase screen brightness
 bindsym XF86MonBrightnessDown exec --no-startup-id light -U 5 # decrease screen brightness
-bindsym $mod+Return exec alacritty
+bindsym $mod+Return exec --no-startup-id alacritty
 bindsym $mod+d exec --no-startup-id rofi -show run
-bindsym $mod+Shift+e exec $HOME/.config/rofi-power/rofi-power
+bindsym $mod+Shift+e exec --no-startup-id $HOME/.config/rofi-power/rofi-power
 bindsym $mod+m exec --no-startup-id rofi-mpc
 bindsym $mod+Shift+minus move scratchpad
 bindsym $mod+minus scratchpad show
