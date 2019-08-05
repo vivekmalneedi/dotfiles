@@ -13,7 +13,7 @@ setopt noclobber
 # no c-s/c-q output freezing
 setopt noflowcontrol
 # allow expansion in prompts
-setopt prompt_subst
+# setopt prompt_subst
 # this is default, but set for share_history
 setopt append_history
 # save each command's beginning timestamp and the duration to the history file
@@ -36,14 +36,6 @@ setopt interactivecomments
 
 # colored ouput
 alias ls='ls --color'
-export LESS=-R
-export LESS_TERMCAP_mb=$'\E[1;31m'     # begin bold
-export LESS_TERMCAP_md=$'\E[1;36m'     # begin blink
-export LESS_TERMCAP_me=$'\E[0m'        # reset bold/blink
-export LESS_TERMCAP_so=$'\E[01;44;33m' # begin reverse video
-export LESS_TERMCAP_se=$'\E[0m'        # reset reverse video
-export LESS_TERMCAP_us=$'\E[1;32m'     # begin underline
-export LESS_TERMCAP_ue=$'\E[0m'        # reset underline
 man() {
     LESS_TERMCAP_md=$'\e[01;31m' \
         LESS_TERMCAP_me=$'\e[0m' \
@@ -54,12 +46,6 @@ man() {
         command man "$@"
 }
 
-#variables
-export VISUAL="nvim"
-export EDITOR="nvim"
-export TERMINAL="alacritty"
-export XDG_RUNTIME_DIR="/run/user/$UID"
-export DBUS_SESSION_BUS_ADDRESS="unix:path=${XDG_RUNTIME_DIR}/bus"
 
 #Aliases
 alias xmerge='xrdb -merge ~/.Xresources'
@@ -72,10 +58,6 @@ alias yayu='yay --answerupgrade None --answeredit None --answerdiff None --answe
 alias yay='yay --editor nvim --editmenu --sudoloop'
 alias find='fd'
 alias grep='rg'
-export IDF_PATH=~/esp/esp-idf
-export PATH="/usr/lib/ccache/bin/:$PATH"
-export GPG_TTY=$(tty)
-export AUTO_LS_COMMANDS=(ls)
 alias f='cd $(fd -H -E "*{.git,.mozilla,misc,windows,.cache}*" -t f -t l -t d . '/home' | fzy)'
 alias n='nvim $(fd -H -E "*{.git,.mozilla,misc,windows,.cache}*" -t f -t l -t d . '/home' | fzy)'
 alias checkout='git checkout $(git branch | cut -c 3- | fzy)'
@@ -179,7 +161,6 @@ zplugin light rapgenic/zsh-git-complete-urls
 
 #plugin aliases/settings
 alias gi="git-ignore"
-export CRASIS_THEME="zdharma-256"
 
 #OMZ
 zplugin ice lucid wait'0'

@@ -21,15 +21,15 @@ exec --no-startup-id betterlockscreen -l
 assign [class="Thunderbird"] 6: 
 #assign [instance="Slack"] 10: 
 assign [instance="ncmpcpp"] 5: 
-assign [class="Caprine"] 9: 
+# assign [class="Caprine"] 9: 
 
 exec --no-startup-id thunderbird
-exec --no-startup-id "alacritty --class ncmpcpp -e 'ncmpcpp -S visualizer'"
+exec --no-startup-id "alacritty --class ncmpcpp -e ncmpcpp -S visualizer"
 exec --no-startup-id i3-msg 'workspace 1: ; exec --no-startup-id firefox'
-exec --no-startup-id caprine
+# exec --no-startup-id caprine
 
 #keybinds and custom settings
-bindsym XF86AudioRaiseVolume exec --no-startup-id "amixer sset Master -q 5%+
+bindsym XF86AudioRaiseVolume exec --no-startup-id amixer sset Master -q 5%+
 bindsym XF86AudioLowerVolume exec --no-startup-id "amixer sset Master -q 5%-
 bindsym XF86AudioMute exec --no-startup-id "amixer sset Master toggle
 bindsym XF86MonBrightnessUp exec --no-startup-id light -A 5 # increase screen brightness
@@ -67,7 +67,8 @@ bar {
     strip_workspace_numbers yes
     separator_symbol " "
     i3bar_command i3bar -t
-    status_command py3status -c $HOME/.config/i3/i3status.conf
+    # status_command py3status -c $HOME/.config/i3/i3status.conf
+    status_command i3status-rs $HOME/.config/i3/status.toml
 
     colors {
         background #00000000

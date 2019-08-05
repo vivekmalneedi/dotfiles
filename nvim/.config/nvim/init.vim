@@ -10,6 +10,8 @@ set shiftwidth=2        " Indentation amount for < and > commands.
 set nojoinspaces        " Prevents inserting two spaces after punctuation on a join (J)
 set ignorecase          " Make searching case insensitive
 set smartcase           " ... unless the query has capital letters.
+set mouse=a
+set clipboard^=unnamed,unnamedplus
 
 set number relativenumber "hybrid line numbers
 augroup numbertoggle
@@ -18,7 +20,7 @@ augroup numbertoggle
   autocmd BufLeave,FocusLost,InsertEnter   * set norelativenumber
 augroup END
 
-autocmd BufWritePre * :%s/\s\+$//e "remove trailing spaces
+"autocmd BufWritePre * :%s/\s\+$//e "remove trailing spaces
 
 "dein: plugin manager
 if &compatible
@@ -37,6 +39,10 @@ if dein#load_state('~/.cache/dein')
     call dein#add('Konfekt/FastFold')
     call dein#add('farmergreg/vim-lastplace') "open to previous position
     call dein#add('cloudhead/neovim-fuzzy')
+    call dein#add('c0r73x/neotags.nvim')
+
+    " Syntax
+    call dein#add('cespare/vim-toml')
 
     " UI
     call dein#add('vim-airline/vim-airline')
@@ -64,6 +70,7 @@ if dein#load_state('~/.cache/dein')
     call dein#add('Shougo/neosnippet.vim')
     call dein#add('Shougo/neosnippet-snippets')
     call dein#add('jiangmiao/auto-pairs')
+    call dein#add('nachumk/systemverilog.vim')
 
     " git/github
     call dein#add('tpope/vim-fugitive') "git extension
@@ -82,6 +89,8 @@ endif
 
 "general
 nnoremap <C-p> :FuzzyOpen<CR>
+autocmd FileType systemverilog,verilog autocmd BufWritePre <buffer> execute "normal! gg=G \<C-O>\<C-O>"
+let g:neotags_enabled=1
 
 "Syntax Highlighting
 filetype plugin indent on
@@ -120,6 +129,7 @@ let g:ale_lint_on_text_changed = 'never'
 let g:ale_fix_on_save = 1
 let g:airline#extensions#ale#enabled = 1
 let b:ale_fixers = {
+      \'*': ['remove_trailing_lines', 'trim_whitespace'],
       \'python': ['yapf'],
       \'c++': ['clang-format'],
       \'c': ['clang-format'],
@@ -133,7 +143,8 @@ let b:ale_linters = {
       \'make': ['checkmake'],
       \'cmake': ['cmakelint'],
       \'markdown': ['remark-lint'],
-      \'yaml': ['yamllint']}
+      \'yaml': ['yamllint'],
+      \'systemverilog': ['verilator']}
 
 let g:ale_javascript_prettier_options = '--no-bracket-spacing'
 let g:ale_use_global_executables = 1

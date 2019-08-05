@@ -1,0 +1,48 @@
+theme = "solarized-dark"
+icons = "awesome"
+
+[[block]]
+block = "music"
+buttons = ["play", "next"]
+marquee = false
+max_width = 10
+
+[[block]]
+block = "weather"
+service = { name = "openweathermap", api_key = "35e05158b88fdb82f5a0caaa125fe8ed", city_id = "4459467", units = "imperial" }
+
+[[block]]
+block = "pacman"
+interval = 10
+
+[[block]]
+block = "temperature"
+
+[[block]]
+block = "memory"
+display_type = "memory"
+format_mem = "{Mup}%"
+format_swap = "{SUp}%"
+
+[[block]]
+block = "cpu"
+interval = 1
+
+[[block]]
+block = "sound"
+
+[[block]]
+block = "backlight"
+device = "intel_backlight"
+
+[[block]]
+block = "battery"
+interval = 5
+driver = "upower"
+device = "BAT1"
+format = "{percentage}% {time} {power}"
+
+[[block]]
+block = "time"
+interval = 60
+format = "%a %d/%m %r"
