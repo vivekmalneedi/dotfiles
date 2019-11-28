@@ -38,11 +38,10 @@ device = "intel_backlight"
 [[block]]
 block = "battery"
 interval = 5
-driver = "upower"
-device = "BAT1"
 format = "{percentage}% {time} {power}"
 
 [[block]]
 block = "time"
-interval = 60
+interval = 1
 format = "%a %d/%m %r"
+on_click = "maim -s ~/Pictures/$(date +%s).png"

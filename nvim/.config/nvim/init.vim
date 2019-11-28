@@ -39,10 +39,12 @@ if dein#load_state('~/.cache/dein')
     call dein#add('Konfekt/FastFold')
     call dein#add('farmergreg/vim-lastplace') "open to previous position
     call dein#add('cloudhead/neovim-fuzzy')
-    call dein#add('c0r73x/neotags.nvim')
 
     " Syntax
     call dein#add('cespare/vim-toml')
+
+    " Formatting
+    call dein#add('sbdchd/neoformat')
 
     " UI
     call dein#add('vim-airline/vim-airline')
@@ -53,24 +55,9 @@ if dein#load_state('~/.cache/dein')
     call dein#add('Xuyuanp/nerdtree-git-plugin')
 
     " Completion
-    call dein#add('w0rp/ale') "linting/fixing
-    call dein#add('Shougo/deoplete.nvim') "completion
-    call dein#add('Shougo/neco-syntax') "completetion plugin that uses language syntax file
-    call dein#add('deoplete-plugins/deoplete-jedi') "python
-    call dein#add('Shougo/neco-vim')
-    call dein#add('deoplete-plugins/deoplete-zsh')
-    call dein#add('SevereOverfl0w/deoplete-github')
-    call dein#add('Shougo/neoinclude.vim')
-    call dein#add('ujihisa/neco-look')
-    call dein#add('deoplete-plugins/deoplete-asm')
-    call dein#add('Shougo/context_filetype.vim')
-    call dein#add('Shougo/neopairs.vim')
-    call dein#add('Shougo/echodoc.vim')
-    call dein#add('Shougo/deoplete-clangx')
-    call dein#add('Shougo/neosnippet.vim')
-    call dein#add('Shougo/neosnippet-snippets')
     call dein#add('jiangmiao/auto-pairs')
     call dein#add('nachumk/systemverilog.vim')
+    call dein#add('neoclide/coc.nvim', {'merge':0, 'rev': 'release'}) "lsp support
 
     " git/github
     call dein#add('tpope/vim-fugitive') "git extension
@@ -122,32 +109,6 @@ let g:NERDCompactSexyComs = 1
 let g:NERDDefaultAlign = 'left'
 let g:NERDCommentEmptyLines = 1
 let g:NERDTrimTrailingWhitespace = 1
-
-"ale
-let g:ale_completion_enabled = 0
-let g:ale_lint_on_text_changed = 'never'
-let g:ale_fix_on_save = 1
-let g:airline#extensions#ale#enabled = 1
-let b:ale_fixers = {
-      \'*': ['remove_trailing_lines', 'trim_whitespace'],
-      \'python': ['yapf'],
-      \'c++': ['clang-format'],
-      \'c': ['clang-format'],
-      \'cmake': ['cmake-format'],
-      \'markdown': ['prettier'],
-      \'yaml': ['prettier']}
-let b:ale_linters = {
-      \'python': ['flake8'],
-      \'c++': ['clang', 'cppcheck', 'clang-tidy'],
-      \'c': ['clang', 'cppcheck', 'clang-tidy'],
-      \'make': ['checkmake'],
-      \'cmake': ['cmakelint'],
-      \'markdown': ['remark-lint'],
-      \'yaml': ['yamllint'],
-      \'systemverilog': ['verilator']}
-
-let g:ale_javascript_prettier_options = '--no-bracket-spacing'
-let g:ale_use_global_executables = 1
 
 "Snippets
 " Plugin key-mappings.
@@ -214,3 +175,44 @@ nmap <Leader>L <Plug>(easymotion-overwin-line)
 " Move to word
 map  <Leader>w <Plug>(easymotion-bd-w)
 nmap <Leader>w <Plug>(easymotion-overwin-w)
+
+"Neoformat
+augroup fmt
+  autocmd!
+  au BufWritePre * try | undojoin | Neoformat | catch /^Vim\%((\a\+)\)\=:E790/ | finally | silent Neoformat | endtry
+augroup END
+
+"Coc
+"ccls
+" bases
+nn <silent> xb :call CocLocations('ccls','$ccls/inheritance')<cr>
+" bases of up to 3 levels
+nn <silent> xb :call CocLocations('ccls','$ccls/inheritance',{'levels':3})<cr>
+" derived
+nn <silent> xd :call CocLocations('ccls','$ccls/inheritance',{'derived':v:true})<cr>
+" derived of up to 3 levels
+nn <silent> xD :call CocLocations('ccls','$ccls/inheritance',{'derived':v:true,'levels':3})<cr>
+
+" caller
+nn <silent> xc :call CocLocations('ccls','$ccls/call')<cr>
+" callee
+nn <silent> xC :call CocLocations('ccls','$ccls/call',{'callee':v:true})<cr>
+
+" $ccls/member
+" member variables / variables in a namespace
+nn <silent> xm :call CocLocations('ccls','$ccls/member')<cr>
+" member functions / functions in a namespace
+nn <silent> xf :call CocLocations('ccls','$ccls/member',{'kind':3})<cr>
+" nested classes / types in a namespace
+nn <silent> xs :call CocLocations('ccls','$ccls/member',{'kind':2})<cr>
+
+nmap <silent> xt <Plug>(coc-type-definition)<cr>
+nn <silent> xv :call CocLocations('ccls','$ccls/vars')<cr>
+nn <silent> xV :call CocLocations('ccls','$ccls/vars',{'kind':1})<cr>
+
+nn xx x
+
+nn <silent><buffer> <C-l> :call CocLocations('ccls','$ccls/navigate',{'direction':'D'})<cr>
+"nn <silent><buffer> <C-k> :call CocLocations('ccls','$ccls/navigate',{'direction':'L'})<cr>
+"nn <silent><buffer> <C-j> :call CocLocations('ccls','$ccls/navigate',{'direction':'R'})<cr>
+nn <silent><buffer> <C-h> :call CocLocations('ccls','$ccls/navigate',{'direction':'U'})<cr>
