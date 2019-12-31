@@ -44,4 +44,4 @@ format = "{percentage}% {time} {power}"
 block = "time"
 interval = 1
 format = "%a %d/%m %r"
-on_click = "maim -s ~/Pictures/$(date +%s).png"
+on_click = "i3-msg 'exec maim -s ~/Pictures/$(date +%s).png'"
