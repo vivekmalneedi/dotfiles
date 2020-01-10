@@ -52,8 +52,9 @@ alias xmerge='xrdb -merge ~/.Xresources'
 alias keil='wine "C:\Keil\UV4\UV4.exe"'
 alias ranger='ranger --choosedir=$HOME/.rangerdir; LASTDIR=`cat $HOME/.rangerdir`; cd "$LASTDIR"'
 alias gpucheck='cat /proc/acpi/bbswitch'
-alias gpuoff='sudo Desktop/disablegpu.sh'
-alias gpuon='sudo Desktop/enablegpu.sh'
+# alias gpuoff='sudo Desktop/disablegpu.sh'
+alias gpuoff='tee /proc/acpi/bbswitch <<<OFF'
+# alias gpuon='sudo Desktop/enablegpu.sh'
 alias clean='yay -Scc'
 alias yayu='yay --answerupgrade None --answeredit None --answerdiff None --answerclean Nonr --sudoloop -Syu'
 alias yay='yay --editor nvim --editmenu --sudoloop'
@@ -67,6 +68,8 @@ alias mv='advmv -g'
 alias youtube-dl='youtube-dl -f best'
 alias mpy='mpv --ytdl-format=bestaudio --loop'
 alias clamscan='clamdscan --multiscan --fdpass'
+alias vim="nvim"
+alias vi="nvim"
 
 #functions
 transfer() { if [ $# -eq 0 ]; then echo -e "No arguments specified. Usage:\necho transfer /tmp/test.md\ncat /tmp/test.md | transfer test.md"; return 1; fi
@@ -138,7 +141,8 @@ zplugin ice lucid wait'0'
 zplugin light hlissner/zsh-autopair
 zplugin ice lucid wait'0'
 zplugin light oz/safe-paste
-zplugin ice make'!'
+zplugin ice from'gh-r' as'program'
+zplugin light sei40kr/fast-alias-tips-bin
 zplugin light sei40kr/zsh-fast-alias-tips
 zplugin ice lucid wait'0'
 zplugin light zdharma/zui

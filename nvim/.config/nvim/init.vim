@@ -28,7 +28,7 @@ if &compatible
 endif
 
 " append to runtime path
-set rtp+=/usr/share/vim/vimfiles
+set runtimepath+=/home/vivek/.cache/dein/repos/github.com/Shougo/dein.vim
 if dein#load_state('~/.cache/dein')
     "general
     call dein#begin('~/.cache/dein')
