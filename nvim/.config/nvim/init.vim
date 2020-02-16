@@ -5,8 +5,8 @@ set showmatch           " Show matching brackets.
 set number              " Show the line numbers on the left side.
 set formatoptions+=o    " Continue comment marker in new lines.
 set expandtab           " Insert spaces when TAB is pressed.
-set tabstop=2           " Render TABs using this many spaces.
-set shiftwidth=2        " Indentation amount for < and > commands.
+set tabstop=4           " Render TABs using this many spaces.
+set shiftwidth=4        " Indentation amount for < and > commands.
 set nojoinspaces        " Prevents inserting two spaces after punctuation on a join (J)
 set ignorecase          " Make searching case insensitive
 set smartcase           " ... unless the query has capital letters.
@@ -53,11 +53,11 @@ if dein#load_state('~/.cache/dein')
     call dein#add('easymotion/vim-easymotion') "new movement motions
     call dein#add('scrooloose/nerdtree')
     call dein#add('Xuyuanp/nerdtree-git-plugin')
+    call dein#add('liuchengxu/vista.vim')
 
     " Completion
-    call dein#add('jiangmiao/auto-pairs')
-    call dein#add('nachumk/systemverilog.vim')
     call dein#add('neoclide/coc.nvim', {'merge':0, 'rev': 'release'}) "lsp support
+    call dein#add('honza/vim-snippets')
 
     " git/github
     call dein#add('tpope/vim-fugitive') "git extension
@@ -76,21 +76,14 @@ endif
 
 "general
 nnoremap <C-p> :FuzzyOpen<CR>
-autocmd FileType systemverilog,verilog autocmd BufWritePre <buffer> execute "normal! gg=G \<C-O>\<C-O>"
-let g:neotags_enabled=1
+"autocmd FileType systemverilog,verilog autocmd BufWritePre <buffer> execute "normal! gg=G \<C-O>\<C-O>"
 
+set termguicolors
 "Syntax Highlighting
 filetype plugin indent on
 syntax enable
-"let g:oceanic_next_terminal_bold = 1
-"let g:oceanic_next_terminal_italic = 1
-"colorscheme monokai
+colorscheme OceanicNext
 let g:chromatica#responsive_mode=1
-
-" deoplete tab-complete
-let g:deoplete#enable_at_startup = 1
-inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
-autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
 
 "Airline Customization
 if !exists('g:airline_symbols')
@@ -109,27 +102,6 @@ let g:NERDCompactSexyComs = 1
 let g:NERDDefaultAlign = 'left'
 let g:NERDCommentEmptyLines = 1
 let g:NERDTrimTrailingWhitespace = 1
-
-"Snippets
-" Plugin key-mappings.
-" Note: It must be "imap" and "smap".  It uses <Plug> mappings.
-imap <C-k>     <Plug>(neosnippet_expand_or_jump)
-smap <C-k>     <Plug>(neosnippet_expand_or_jump)
-xmap <C-k>     <Plug>(neosnippet_expand_target)
-
-" SuperTab like snippets behavior.
-" Note: It must be "imap" and "smap".  It uses <Plug> mappings.
-"imap <expr><TAB>
-" \ pumvisible() ? "\<C-n>" :
-" \ neosnippet#expandable_or_jumpable() ?
-" \    "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
-smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-\ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
-
-" For conceal markers.
-if has('conceal')
-  set conceallevel=2 concealcursor=niv
-endif
 
 "Nerdtree
 autocmd StdinReadPre * let s:std_in=1
@@ -183,6 +155,136 @@ augroup fmt
 augroup END
 
 "Coc
+" if hidden is not set, TextEdit might fail.
+set hidden
+
+" Some servers have issues with backup files, see #649
+set nobackup
+set nowritebackup
+
+" Better display for messages
+set cmdheight=2
+
+" You will have bad experience for diagnostic messages when it's default 4000.
+set updatetime=300
+
+" don't give |ins-completion-menu| messages.
+set shortmess+=c
+
+" always show signcolumns
+set signcolumn=yes
+
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? coc#_select_confirm() :
+      \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+let g:coc_snippet_next = '<tab>'
+
+" Use <c-space> to trigger completion.
+inoremap <silent><expr> <c-space> coc#refresh()
+
+" Use <cr> to confirm completion, `<C-g>u` means break undo chain at current position.
+" Coc only does snippet and additional edit on confirm.
+inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+" Or use `complete_info` if your vim support it, like:
+" inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
+
+" Use `[g` and `]g` to navigate diagnostics
+nmap <silent> [g <Plug>(coc-diagnostic-prev)
+nmap <silent> ]g <Plug>(coc-diagnostic-next)
+
+" Remap keys for gotos
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+
+" Use K to show documentation in preview window
+nnoremap <silent> K :call <SID>show_documentation()<CR>
+
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  else
+    call CocAction('doHover')
+  endif
+endfunction
+
+" Highlight symbol under cursor on CursorHold
+autocmd CursorHold * silent call CocActionAsync('highlight')
+
+" Remap for rename current word
+nmap <leader>rn <Plug>(coc-rename)
+
+" Remap for format selected region
+xmap <leader>f  <Plug>(coc-format-selected)
+nmap <leader>f  <Plug>(coc-format-selected)
+
+augroup mygroup
+  autocmd!
+  " Setup formatexpr specified filetype(s).
+  autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
+  " Update signature help on jump placeholder
+  autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+augroup end
+
+" Remap for do codeAction of selected region, ex: `<leader>aap` for current paragraph
+xmap <leader>a  <Plug>(coc-codeaction-selected)
+nmap <leader>a  <Plug>(coc-codeaction-selected)
+
+" Remap for do codeAction of current line
+nmap <leader>ac  <Plug>(coc-codeaction)
+" Fix autofix problem of current line
+nmap <leader>qf  <Plug>(coc-fix-current)
+
+" Create mappings for function text object, requires document symbols feature of languageserver.
+xmap if <Plug>(coc-funcobj-i)
+xmap af <Plug>(coc-funcobj-a)
+omap if <Plug>(coc-funcobj-i)
+omap af <Plug>(coc-funcobj-a)
+
+" Use <TAB> for select selections ranges, needs server support, like: coc-tsserver, coc-python
+nmap <silent> <TAB> <Plug>(coc-range-select)
+xmap <silent> <TAB> <Plug>(coc-range-select)
+
+" Use `:Format` to format current buffer
+command! -nargs=0 Format :call CocAction('format')
+
+" Use `:Fold` to fold current buffer
+command! -nargs=? Fold :call     CocAction('fold', <f-args>)
+
+" use `:OR` for organize import of current buffer
+command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organizeImport')
+
+" Add status line support, for integration with other plugin, checkout `:h coc-status`
+set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
+
+" Using CocList
+" Show all diagnostics
+nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>
+" Manage extensions
+nnoremap <silent> <space>e  :<C-u>CocList extensions<cr>
+" Show commands
+nnoremap <silent> <space>c  :<C-u>CocList commands<cr>
+" Find symbol of current document
+nnoremap <silent> <space>o  :<C-u>CocList outline<cr>
+" Search workspace symbols
+nnoremap <silent> <space>s  :<C-u>CocList -I symbols<cr>
+" Do default action for next item.
+nnoremap <silent> <space>j  :<C-u>CocNext<CR>
+" Do default action for previous item.
+nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
+" Resume latest coc list
+nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
+
+
 "ccls
 " bases
 nn <silent> xb :call CocLocations('ccls','$ccls/inheritance')<cr>
@@ -216,3 +318,8 @@ nn <silent><buffer> <C-l> :call CocLocations('ccls','$ccls/navigate',{'direction
 "nn <silent><buffer> <C-k> :call CocLocations('ccls','$ccls/navigate',{'direction':'L'})<cr>
 "nn <silent><buffer> <C-j> :call CocLocations('ccls','$ccls/navigate',{'direction':'R'})<cr>
 nn <silent><buffer> <C-h> :call CocLocations('ccls','$ccls/navigate',{'direction':'U'})<cr>
+
+"Vista
+let g:vista_cursor_delay = 50
+let g:vista_close_on_jump = 1
+let g:vista_default_executive = 'coc'

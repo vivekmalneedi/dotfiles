@@ -53,10 +53,10 @@ alias keil='wine "C:\Keil\UV4\UV4.exe"'
 alias ranger='ranger --choosedir=$HOME/.rangerdir; LASTDIR=`cat $HOME/.rangerdir`; cd "$LASTDIR"'
 alias gpucheck='cat /proc/acpi/bbswitch'
 # alias gpuoff='sudo Desktop/disablegpu.sh'
-alias gpuoff='tee /proc/acpi/bbswitch <<<OFF'
+alias gpuoff='sudo tee /proc/acpi/bbswitch <<<OFF'
 # alias gpuon='sudo Desktop/enablegpu.sh'
 alias clean='yay -Scc'
-alias yayu='yay --answerupgrade None --answeredit None --answerdiff None --answerclean Nonr --sudoloop -Syu'
+alias yayu='yay --answerupgrade None --answeredit None --answerdiff None --answerclean Nonr --sudoloop --noremovemake -Syu'
 alias yay='yay --editor nvim --editmenu --sudoloop'
 alias find='fd'
 alias grep='rg'
@@ -135,9 +135,10 @@ zplugin ice lucid wait'0'
 zplugin light marzocchi/zsh-notify #notifications for long running programs
 zplugin ice lucid wait'0'
 zplugin light twang817/zsh-clipboard #cli clipboard interaction
-PS1="➜"
-zplugin light denysdovhan/spaceship-prompt
-zplugin ice lucid wait'0'
+# PS1="➜"
+PS1=">"
+# zplugin light denysdovhan/spaceship-prompt
+# zplugin ice lucid wait'0'
 zplugin light hlissner/zsh-autopair
 zplugin ice lucid wait'0'
 zplugin light oz/safe-paste
@@ -207,5 +208,9 @@ export EDITOR="nvim"
 export VISUAL="nvim"
 export TERMINAL="alacritty"
 export PATH="${PATH}:/home/vivek/Documents/tm4c-llvm-toolchain"
-export WINEPREFIX=~/.wine
-export WINEARCH=win32
+export PATH="${PATH}:/home/vivek/.cargo/bin"
+export PATH="${PATH}:/home/vivek/.local/bin"
+# export WINEPREFIX=~/.wine64
+# export WINEARCH=win64
+
+eval "$(starship init zsh)"
