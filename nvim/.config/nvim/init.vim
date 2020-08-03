@@ -42,6 +42,7 @@ if dein#load_state('~/.cache/dein')
 
     " Syntax
     call dein#add('cespare/vim-toml')
+    call dein#add('dag/vim-fish')
 
     " Formatting
     call dein#add('sbdchd/neoformat')
@@ -57,7 +58,7 @@ if dein#load_state('~/.cache/dein')
 
     " Completion
     call dein#add('neoclide/coc.nvim', {'merge':0, 'rev': 'release'}) "lsp support
-    call dein#add('honza/vim-snippets')
+    "call dein#add('honza/vim-snippets')
 
     " git/github
     call dein#add('tpope/vim-fugitive') "git extension
@@ -69,6 +70,7 @@ if dein#load_state('~/.cache/dein')
     call dein#add('mhartington/oceanic-next') "syntax theme
     call dein#add('arakashic/chromatica.nvim') "clang based syntax highligting
     call dein#add('mboughaba/i3config.vim') "i3 config syntax highlighting
+    call dein#add('connorholyday/vim-snazzy')
 
     call dein#end()
     call dein#save_state()
@@ -76,7 +78,6 @@ endif
 
 "general
 nnoremap <C-p> :FuzzyOpen<CR>
-"autocmd FileType systemverilog,verilog autocmd BufWritePre <buffer> execute "normal! gg=G \<C-O>\<C-O>"
 
 set termguicolors
 "Syntax Highlighting
@@ -153,6 +154,8 @@ augroup fmt
   autocmd!
   au BufWritePre * try | undojoin | Neoformat | catch /^Vim\%((\a\+)\)\=:E790/ | finally | silent Neoformat | endtry
 augroup END
+
+autocmd BufWritePre * %s/\s\+$//e
 
 "Coc
 " if hidden is not set, TextEdit might fail.
@@ -321,5 +324,6 @@ nn <silent><buffer> <C-h> :call CocLocations('ccls','$ccls/navigate',{'direction
 
 "Vista
 let g:vista_cursor_delay = 50
-let g:vista_close_on_jump = 1
 let g:vista_default_executive = 'coc'
+let g:vista_close_on_jump = 1
+nnoremap <silent> L :Vista<CR>

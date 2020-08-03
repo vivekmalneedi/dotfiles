@@ -6,33 +6,80 @@ zstyle :compinstall filename '/home/vivek/.zshrc'
 zstyle ':completion:*' matcher-list '' 'm:{a-zA-Z}={A-Za-z}'
 
 #options
-setopt autocd
+# Use case-insensitve globbing.
+unsetopt case_glob
+# glob dotfiles as well
 setopt globdots
-setopt histignoredups
-setopt noclobber
-# no c-s/c-q output freezing
-setopt noflowcontrol
-# allow expansion in prompts
-# setopt prompt_subst
-# this is default, but set for share_history
-setopt append_history
-# save each command's beginning timestamp and the duration to the history file
-setopt extended_history
-# display PID when suspending processes as well
-setopt longlistjobs
-# try to avoid the 'zsh: no matches found...'
-setopt nonomatch
-# report the status of backgrounds jobs immediately
+# use extended globbing
+setopt extendedglob
+# Automatically change directory if a directory is entered
+setopt autocd
+# Allow brace character class list expansion.
+setopt brace_ccl
+# Combine zero-length punctuation characters (accents) with the base character.
+setopt combining_chars
+# Allow 'Henry''s Garage' instead of 'Henry'\''s Garage'.
+setopt rc_quotes
+# Don't print a warning message if a mail file has been accessed.
+unsetopt mail_warning
+# List jobs in the long format by default.
+setopt long_list_jobs
+# Attempt to resume existing job before creating a new process.
+setopt auto_resume
+# Report status of background jobs immediately.
 setopt notify
-# whenever a command completion is attempted, make sure the entire command path
-# is hashed first.
-setopt hash_list_all
-# not just at the end
-setopt completeinword
-# use zsh style word splitting
-setopt noshwordsplit
-# allow use of comments in interactive code
-setopt interactivecomments
+# Don't run all background jobs at a lower priority.
+unsetopt bg_nice
+# Don't kill jobs on shell exit.
+unsetopt hup
+# Don't report on jobs when shell exit.
+unsetopt check_jobs
+# Complete from both ends of a word.
+setopt complete_in_word
+# Move cursor to the end of a completed word.
+setopt always_to_end
+# Perform path search even on command names with slashes.
+setopt path_dirs
+# Show completion menu on a successive tab press.
+setopt auto_menu
+# Automatically list choices on ambiguous completion.
+setopt auto_list
+# If completed parameter is a directory, add a trailing slash.
+setopt auto_param_slash
+setopt no_complete_aliases
+# Do not autoselect the first completion entry.
+setopt menu_complete
+# Disable start/stop characters in shell editor.
+unsetopt flow_control
+setopt appendhistory notify
+unsetopt beep nomatch
+# Treat the '!' character specially during expansion.
+setopt bang_hist
+# Write to the history file immediately, not when the shell exits.
+setopt inc_append_history
+# Share history between all sessions.
+setopt share_history
+# Expire a duplicate event first when trimming history.
+setopt hist_expire_dups_first
+# Do not record an event that was just recorded again.
+setopt hist_ignore_dups
+# Delete an old recorded event if a new event is a duplicate.
+setopt hist_ignore_all_dups
+# Do not display a previously found event.
+setopt hist_find_no_dups
+# Do not record an event starting with a space.
+setopt hist_ignore_space
+# Do not write a duplicate event to the history file.
+setopt hist_save_no_dups
+# Do not execute immediately upon history expansion.
+setopt hist_verify
+# Show timestamp in history
+setopt extended_history
+setopt auto_pushd pushd_silent pushd_to_home
+# Remove duplicate entries
+setopt pushd_ignore_dups
+# This reverts the +/- operators.
+setopt pushd_minus
 
 # colored ouput
 alias ls='ls --color'
@@ -68,8 +115,12 @@ alias mv='advmv -g'
 alias youtube-dl='youtube-dl -f best'
 alias mpy='mpv --ytdl-format=bestaudio --loop'
 alias clamscan='clamdscan --multiscan --fdpass'
-alias vim="nvim"
-alias vi="nvim"
+alias hdump="od -A x -t x1z -v"
+alias ls='lsd'
+alias l='ls -l'
+alias la='ls -a'
+alias lla='ls -la'
+alias lt='ls --tree'
 
 #functions
 transfer() { if [ $# -eq 0 ]; then echo -e "No arguments specified. Usage:\necho transfer /tmp/test.md\ncat /tmp/test.md | transfer test.md"; return 1; fi
@@ -149,6 +200,8 @@ zplugin ice lucid wait'0'
 zplugin light zdharma/zui
 zplugin ice lucid wait'0'
 zplugin light zdharma/zplugin-crasis
+zplugin ice lucid wait'0'
+zplugin light b4b4r07/enhancd
 
 #git
 zplugin ice lucid wait'[[ -n ${ZLAST_COMMANDS[(r)gi*]} ]]' as"program" pick"bin/git-dsf"
@@ -194,8 +247,6 @@ zplugin ice lucid wait'0'
 zplugin light zsh-users/zsh-history-substring-search
 zplugin ice lucid wait'0' blockf
 zplugin light fnoris/keybase-zsh-completion
-# zplugin ice lucid wait'0' blockf
-# zplugin snippet https://github.com/beetbox/beets/blob/master/extra/_beet
 
 zplugin ice lucid wait'1' atinit'zpcompinit; zpcdreplay'
 zplugin light zdharma/fast-syntax-highlighting
@@ -207,10 +258,18 @@ export MAKEFLAGS="-j $(nproc)"
 export EDITOR="nvim"
 export VISUAL="nvim"
 export TERMINAL="alacritty"
-export PATH="${PATH}:/home/vivek/Documents/tm4c-llvm-toolchain"
 export PATH="${PATH}:/home/vivek/.cargo/bin"
 export PATH="${PATH}:/home/vivek/.local/bin"
+export PATH="${PATH}:/opt/riscv/bin"
+export PATH="${PATH}:/usr/local/bin/bin"
+export PATH="$HOME/.emacs.d/bin:$PATH"
+export PATH="$HOME/.gem/ruby/2.7.0/bin:$PATH"
+# export PATH="${PATH}:/tools/Xilinx/Vivado/2019.2/bin"
+export VIVADO_PATH=/tools/Xilinx/Vivado/2019.2
 # export WINEPREFIX=~/.wine64
 # export WINEARCH=win64
+export ENHANCD_FILTER="fzy"
+export RISCV=/opt/riscv
+# source /tools/Xilinx/Vivado/2019.2/settings64.sh
 
 eval "$(starship init zsh)"

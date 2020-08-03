@@ -6,7 +6,7 @@ smart_gaps on
 #autostart
 # exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
 exec --no-startup-id nm-applet
-exec --no-startup-id feh --bg-scale $HOME/Pictures/firewatch.png
+exec --no-startup-id feh --bg-scale $HOME/Pictures/firewatch1440.png
 exec --no-startup-id xss-lock -- betterlockscreen -l
 exec --no-startup-id picom -b
 # exec --no-startup-id beet mpdstats
@@ -22,12 +22,14 @@ assign [class="Mailspring"] 6: 
 assign [class="Slack"] 10: 
 assign [instance="ncmpcpp"] 5: 
 assign [class="TelegramDesktop"] 9: 
+assign [class="Vivado"] 3: 
 
 exec --no-startup-id mailspring
-exec --no-startup-id "alacritty --class ncmpcpp -e ncmpcpp -S visualizer"
+# exec --no-startup-id "alacritty --class ncmpcpp -e ncmpcpp -S visualizer"
 exec --no-startup-id i3-msg 'workspace 1: ; exec --no-startup-id firefox'
 exec --no-startup-id telegram-desktop
-exec --no-startup-id udiskie -s &
+exec --no-startup-id udiskie -s
+exec --no-startup-id mons -a
 
 #keybinds and custom settings
 bindsym XF86AudioRaiseVolume exec --no-startup-id amixer sset Master -q 5%+
@@ -35,14 +37,20 @@ bindsym XF86AudioLowerVolume exec --no-startup-id "amixer sset Master -q 5%-
 bindsym XF86AudioMute exec --no-startup-id "amixer sset Master toggle
 bindsym XF86MonBrightnessUp exec --no-startup-id pkexec /usr/bin/brillo -A 5
 bindsym XF86MonBrightnessDown exec --no-startup-id pkexec /usr/bin/brillo -U 5
+bindsym XF86AudioPlay exec "mpris-ctl pp"
+bindsym XF86AudioStop exec "mpris-ctl stop"
+bindsym XF86AudioNext exec "mpris-ctl next"
+bindsym XF86AudioPrev exec "mpris-ctl prev"
 bindsym $mod+Return exec --no-startup-id alacritty
-bindsym $mod+d exec --no-startup-id rofi -show run
+bindsym $mod+d exec --no-startup-id rofi-appsmenu
+bindsym Print exec --no-startup-id maim -s | tee ~/Pictures/$(date +%s).png | xclip -selection clipboard -t image/png
 bindsym $mod+Shift+e exec --no-startup-id $HOME/.config/rofi-power/rofi-power
 bindsym $mod+m exec --no-startup-id rofi-mpc
 bindsym $mod+Shift+minus move scratchpad
 bindsym $mod+minus scratchpad show
 bindsym $mod+c exec --no-startup-id rofi -show calc -modi calc -no-show-match -no-sort -calc-command "echo '{result}' | xclip -selection clipboard"
 exec --no-startup-id setxkbmap -option caps:escape
+bindsym F7 exec --no-startup-id cautoclick -n 100 -i 1 -p 1
 
 #settings
 for_window [class="^.*"] border pixel 1
@@ -62,7 +70,7 @@ set $ws10 "10: "
 
 bar {
     position top
-    font pango:SauceCodePro Nerd Font 9
+    font pango:FuraMono Nerd Font Mono 9
     strip_workspace_numbers yes
     separator_symbol " "
     i3bar_command i3bar -t
@@ -83,7 +91,7 @@ bar {
 
 # default settings
 set $mod Mod1
-font pango:monospace 8
+font pango:FuraMono Nerd Font Mono 8
 floating_modifier $mod
 bindsym $mod+Shift+q kill
 bindsym $mod+j focus left

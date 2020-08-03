@@ -10,15 +10,16 @@
         ".git/",
         ".hg/"
       ],
+
       "initializationOptions": {
         "cache": {
           "directory": "/tmp/ccls"
         }
       }
     },
-    "hdlChecker": {
+    "svls": {
       "command": "svls",
-      "filetypes": ["vhdl", "verilog", "systemverilog"]
+      "filetypes": ["systemverilog"]
     }
   }
 }
