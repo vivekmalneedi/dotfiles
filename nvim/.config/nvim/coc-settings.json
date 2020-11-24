@@ -1,25 +1,35 @@
 {
-  "languageserver": {
-    "ccls": {
-      "command": "ccls",
-      "filetypes": ["c", "cpp", "objc", "objcpp"],
-      "rootPatterns": [
-        ".ccls",
-        "compile_commands.json",
-        ".vim/",
-        ".git/",
-        ".hg/"
-      ],
-
-      "initializationOptions": {
-        "cache": {
-          "directory": "/tmp/ccls"
+    "diagnostic.virtualText": true,
+    "diagnostic.virtualTextCurrentLineOnly": false,
+    // "diagnostic.enableMessage": "never",
+    "suggest.enablePreselect": true,
+    "codeLens.enable": true,
+    "rust-analyzer.checkOnSave.command": "clippy",
+    "python.jediEnabled": false,
+    "yaml.format.enable": true,
+    "coc.preferences.formatOnSaveFiletypes": [
+        "systemverilog",
+        "verilog",
+        "rust",
+        "json",
+        "yaml",
+        "sh",
+        "python"
+    ],
+    "languageserver": {
+        "veridian": {
+            "command": "veridian",
+            "trace.server": "messages",
+            "filetypes": [
+                "systemverilog",
+                "verilog"
+            ]
+        },
+        "ghdl-ls": {
+            "command": "ghdl-ls",
+            "filetypes": [
+                "vhdl"
+            ]
         }
-      }
-    },
-    "svls": {
-      "command": "svls",
-      "filetypes": ["systemverilog"]
     }
-  }
 }

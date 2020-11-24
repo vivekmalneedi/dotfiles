@@ -3,15 +3,52 @@ set history=500
 set autoread "read when a file is externally changed
 set showmatch           " Show matching brackets.
 set number              " Show the line numbers on the left side.
-set formatoptions+=o    " Continue comment marker in new lines.
+"set formatoptions+=o    " Continue comment marker in new lines.
 set expandtab           " Insert spaces when TAB is pressed.
 set tabstop=4           " Render TABs using this many spaces.
 set shiftwidth=4        " Indentation amount for < and > commands.
 set nojoinspaces        " Prevents inserting two spaces after punctuation on a join (J)
-set ignorecase          " Make searching case insensitive
-set smartcase           " ... unless the query has capital letters.
 set mouse=a
 set clipboard^=unnamed,unnamedplus
+set smartindent
+set autoindent
+
+" Sane splits
+set splitright
+set splitbelow
+
+" Permanent undo
+set undodir=~/.vimdid
+set undofile
+
+" Decent wildmenu
+set wildmenu
+set wildmode=list:longest
+set wildignore=.hg,.svn,*~,*.png,*.jpg,*.gif,*.settings,Thumbs.db,*.min.js,*.swp,publish/*,intermediate/*,*.o,*.hi,Zend,vendor
+
+" Wrapping options
+set formatoptions=tc " wrap text and comments using textwidth
+set formatoptions+=r " continue comments when pressing ENTER in I mode
+set formatoptions+=q " enable formatting of comments with gq
+set formatoptions+=n " detect lists for formatting
+set formatoptions+=b " auto-wrap in insert mode, and do not wrap old long lines
+
+" Proper search
+set incsearch
+set ignorecase
+set smartcase
+set gdefault
+
+" Search results centered
+nnoremap <silent> n nzz
+nnoremap <silent> N Nzz
+nnoremap <silent> * *zz
+nnoremap <silent> # #zz
+nnoremap <silent> g* g*zz
+
+" gui settings
+set ttyfast
+set lazyredraw
 
 set number relativenumber "hybrid line numbers
 augroup numbertoggle
@@ -39,6 +76,7 @@ if dein#load_state('~/.cache/dein')
     call dein#add('Konfekt/FastFold')
     call dein#add('farmergreg/vim-lastplace') "open to previous position
     call dein#add('cloudhead/neovim-fuzzy')
+    call dein#add('airblade/vim-rooter') "auto change vim dir
 
     " Syntax
     call dein#add('cespare/vim-toml')
@@ -55,10 +93,18 @@ if dein#load_state('~/.cache/dein')
     call dein#add('scrooloose/nerdtree')
     call dein#add('Xuyuanp/nerdtree-git-plugin')
     call dein#add('liuchengxu/vista.vim')
+    call dein#add('nathanaelkane/vim-indent-guides')
 
     " Completion
     call dein#add('neoclide/coc.nvim', {'merge':0, 'rev': 'release'}) "lsp support
-    "call dein#add('honza/vim-snippets')
+    call dein#add('honza/vim-snippets')
+    call dein#add('jiangmiao/auto-pairs')
+
+    " Editing
+    call dein#add('tpope/vim-surround')
+    call dein#add('coderifous/textobj-word-column.vim')
+    call dein#add('andymass/vim-matchup') "extend % behavior
+    call dein#add('machakann/vim-highlightedyank')
 
     " git/github
     call dein#add('tpope/vim-fugitive') "git extension
@@ -150,10 +196,10 @@ map  <Leader>w <Plug>(easymotion-bd-w)
 nmap <Leader>w <Plug>(easymotion-overwin-w)
 
 "Neoformat
-augroup fmt
-  autocmd!
-  au BufWritePre * try | undojoin | Neoformat | catch /^Vim\%((\a\+)\)\=:E790/ | finally | silent Neoformat | endtry
-augroup END
+" augroup fmt
+  " autocmd!
+  " au BufWritePre * try | undojoin | Neoformat | catch /^Vim\%((\a\+)\)\=:E790/ | finally | silent Neoformat | endtry
+" augroup END
 
 autocmd BufWritePre * %s/\s\+$//e
 
@@ -286,41 +332,6 @@ nnoremap <silent> <space>j  :<C-u>CocNext<CR>
 nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
 " Resume latest coc list
 nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
-
-
-"ccls
-" bases
-nn <silent> xb :call CocLocations('ccls','$ccls/inheritance')<cr>
-" bases of up to 3 levels
-nn <silent> xb :call CocLocations('ccls','$ccls/inheritance',{'levels':3})<cr>
-" derived
-nn <silent> xd :call CocLocations('ccls','$ccls/inheritance',{'derived':v:true})<cr>
-" derived of up to 3 levels
-nn <silent> xD :call CocLocations('ccls','$ccls/inheritance',{'derived':v:true,'levels':3})<cr>
-
-" caller
-nn <silent> xc :call CocLocations('ccls','$ccls/call')<cr>
-" callee
-nn <silent> xC :call CocLocations('ccls','$ccls/call',{'callee':v:true})<cr>
-
-" $ccls/member
-" member variables / variables in a namespace
-nn <silent> xm :call CocLocations('ccls','$ccls/member')<cr>
-" member functions / functions in a namespace
-nn <silent> xf :call CocLocations('ccls','$ccls/member',{'kind':3})<cr>
-" nested classes / types in a namespace
-nn <silent> xs :call CocLocations('ccls','$ccls/member',{'kind':2})<cr>
-
-nmap <silent> xt <Plug>(coc-type-definition)<cr>
-nn <silent> xv :call CocLocations('ccls','$ccls/vars')<cr>
-nn <silent> xV :call CocLocations('ccls','$ccls/vars',{'kind':1})<cr>
-
-nn xx x
-
-nn <silent><buffer> <C-l> :call CocLocations('ccls','$ccls/navigate',{'direction':'D'})<cr>
-"nn <silent><buffer> <C-k> :call CocLocations('ccls','$ccls/navigate',{'direction':'L'})<cr>
-"nn <silent><buffer> <C-j> :call CocLocations('ccls','$ccls/navigate',{'direction':'R'})<cr>
-nn <silent><buffer> <C-h> :call CocLocations('ccls','$ccls/navigate',{'direction':'U'})<cr>
 
 "Vista
 let g:vista_cursor_delay = 50
