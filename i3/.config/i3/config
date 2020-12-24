@@ -4,23 +4,24 @@ gaps outer 0
 smart_gaps on
 
 #autostart
-# exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
+exec --no-startup-id /usr/lib/mate-polkit/polkit-mate-authentication-agent-1
 exec --no-startup-id nm-applet
-exec --no-startup-id feh --bg-scale $HOME/Pictures/firewatch1440.png
+exec --no-startup-id feh --bg-scale $HOME/Pictures/pics/firewatch1440.png
 exec --no-startup-id xss-lock -- betterlockscreen -l
 exec --no-startup-id picom -b
 # exec --no-startup-id beet mpdstats
 # exec --no-startip-id redshift-gtk
 exec --no-startup-id caffeine
 exec --no-startup-id megasync
-exec --no-startup-id slack
+exec --no-startup-id teams
+exec --no-startup-id spotify
 exec --no-startup-id blueberry-tray
 exec --no-startup-id betterlockscreen -l
 
 #application autostart
 assign [class="Mailspring"] 6: 
-assign [class="Slack"] 10: 
-assign [instance="ncmpcpp"] 5: 
+assign [class="Microsoft Teams - Preview"] 10: 
+assign [class="Spotify"] 5: 
 assign [class="TelegramDesktop"] 9: 
 assign [class="Vivado"] 3: 
 
@@ -56,6 +57,8 @@ bindsym F7 exec --no-startup-id cautoclick -n 100 -i 1 -p 1
 for_window [class="^.*"] border pixel 1
 for_window [class="Pavucontrol"] floating enable
 for_window [instance="Ranger"] floating enable
+for_window [title="Microsoft Teams Notification" class="microsoft teams - preview"] floating enable
+for_window [title="Microsoft Teams Notification" class="Microsoft Teams - Preview"] floating enable
 
 set $ws1 "1: "
 set $ws2 "2: "
