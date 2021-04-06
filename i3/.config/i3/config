@@ -4,13 +4,11 @@ gaps outer 0
 smart_gaps on
 
 #autostart
+exec --no-startup-id /usr/bin/prime-offload
 exec --no-startup-id /usr/lib/mate-polkit/polkit-mate-authentication-agent-1
 exec --no-startup-id nm-applet
 exec --no-startup-id feh --bg-scale $HOME/Pictures/pics/firewatch1440.png
-exec --no-startup-id xss-lock -- betterlockscreen -l
 exec --no-startup-id picom -b
-# exec --no-startup-id beet mpdstats
-# exec --no-startip-id redshift-gtk
 exec --no-startup-id caffeine
 exec --no-startup-id megasync
 exec --no-startup-id teams
@@ -19,13 +17,13 @@ exec --no-startup-id blueberry-tray
 exec --no-startup-id betterlockscreen -l
 
 #application autostart
-assign [class="Mailspring"] 6: 
+assign [class="Thunderbird"] 6: 
 assign [class="Microsoft Teams - Preview"] 10: 
 assign [class="Spotify"] 5: 
 assign [class="TelegramDesktop"] 9: 
 assign [class="Vivado"] 3: 
 
-exec --no-startup-id mailspring
+exec --no-startup-id thunderbird
 # exec --no-startup-id "alacritty --class ncmpcpp -e ncmpcpp -S visualizer"
 exec --no-startup-id i3-msg 'workspace 1: ; exec --no-startup-id firefox'
 exec --no-startup-id telegram-desktop
@@ -33,9 +31,9 @@ exec --no-startup-id udiskie -s
 exec --no-startup-id mons -a
 
 #keybinds and custom settings
-bindsym XF86AudioRaiseVolume exec --no-startup-id amixer sset Master -q 5%+
-bindsym XF86AudioLowerVolume exec --no-startup-id "amixer sset Master -q 5%-
-bindsym XF86AudioMute exec --no-startup-id "amixer sset Master toggle
+bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +5%
+bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -5%
+bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle
 bindsym XF86MonBrightnessUp exec --no-startup-id pkexec /usr/bin/brillo -A 5
 bindsym XF86MonBrightnessDown exec --no-startup-id pkexec /usr/bin/brillo -U 5
 bindsym XF86AudioPlay exec "mpris-ctl pp"
@@ -52,6 +50,7 @@ bindsym $mod+minus scratchpad show
 bindsym $mod+c exec --no-startup-id rofi -show calc -modi calc -no-show-match -no-sort -calc-command "echo '{result}' | xclip -selection clipboard"
 exec --no-startup-id setxkbmap -option caps:escape
 bindsym F7 exec --no-startup-id cautoclick -n 100 -i 1 -p 1
+bindsym $mod+F4 exec --no-startup-id xkill
 
 #settings
 for_window [class="^.*"] border pixel 1

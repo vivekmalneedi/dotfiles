@@ -94,17 +94,21 @@ if dein#load_state('~/.cache/dein')
     call dein#add('Xuyuanp/nerdtree-git-plugin')
     call dein#add('liuchengxu/vista.vim')
     call dein#add('nathanaelkane/vim-indent-guides')
+    call dein#add('mhinz/vim-startify')
+    call dein#add('ntpeters/vim-better-whitespace')
 
     " Completion
     call dein#add('neoclide/coc.nvim', {'merge':0, 'rev': 'release'}) "lsp support
     call dein#add('honza/vim-snippets')
     call dein#add('jiangmiao/auto-pairs')
+    call dein#add('tenfyzhong/CompleteParameter.vim')
 
     " Editing
     call dein#add('tpope/vim-surround')
     call dein#add('coderifous/textobj-word-column.vim')
     call dein#add('andymass/vim-matchup') "extend % behavior
     call dein#add('machakann/vim-highlightedyank')
+    call dein#add('dhruvasagar/vim-table-mode')
 
     " git/github
     call dein#add('tpope/vim-fugitive') "git extension
@@ -114,7 +118,7 @@ if dein#load_state('~/.cache/dein')
     " colors
     call dein#add('chrisbra/colorizer') "converts color codes to colors
     call dein#add('mhartington/oceanic-next') "syntax theme
-    call dein#add('arakashic/chromatica.nvim') "clang based syntax highligting
+    call dein#add('jackguo380/vim-lsp-cxx-highlight')
     call dein#add('mboughaba/i3config.vim') "i3 config syntax highlighting
     call dein#add('connorholyday/vim-snazzy')
 
@@ -194,14 +198,6 @@ nmap <Leader>L <Plug>(easymotion-overwin-line)
 " Move to word
 map  <Leader>w <Plug>(easymotion-bd-w)
 nmap <Leader>w <Plug>(easymotion-overwin-w)
-
-"Neoformat
-" augroup fmt
-  " autocmd!
-  " au BufWritePre * try | undojoin | Neoformat | catch /^Vim\%((\a\+)\)\=:E790/ | finally | silent Neoformat | endtry
-" augroup END
-
-autocmd BufWritePre * %s/\s\+$//e
 
 "Coc
 " if hidden is not set, TextEdit might fail.

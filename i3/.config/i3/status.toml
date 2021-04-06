@@ -1,11 +1,20 @@
 theme = "solarized-dark"
 icons = "awesome"
 
+# [[block]]
+# block = "github"
+# format = "{total}|{author}|{comment}|{mention}|{review_requested}"
+
 [[block]]
 block = "music"
 buttons = ["play", "next"]
 marquee = false
 max_width = 10
+
+[[block]]
+block = "nvidia_gpu"
+label = "1650"
+interval = 1
 
 [[block]]
 block = "weather"

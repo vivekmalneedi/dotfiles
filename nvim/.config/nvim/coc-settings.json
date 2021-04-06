@@ -1,12 +1,13 @@
 {
     "diagnostic.virtualText": true,
     "diagnostic.virtualTextCurrentLineOnly": false,
-    // "diagnostic.enableMessage": "never",
     "suggest.enablePreselect": true,
+    "suggest.enablePreview": true,
     "codeLens.enable": true,
     "rust-analyzer.checkOnSave.command": "clippy",
-    "python.jediEnabled": false,
     "yaml.format.enable": true,
+    "python.formatting.provider": "black",
+    "clangd.semanticHighlighting": true,
     "coc.preferences.formatOnSaveFiletypes": [
         "systemverilog",
         "verilog",
@@ -14,7 +15,9 @@
         "json",
         "yaml",
         "sh",
-        "python"
+        "python",
+        "java",
+        "c"
     ],
     "languageserver": {
         "veridian": {
