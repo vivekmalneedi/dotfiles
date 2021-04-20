@@ -107,17 +107,17 @@ if dein#load_state('~/.cache/dein')
     call dein#add('tpope/vim-surround')
     call dein#add('coderifous/textobj-word-column.vim')
     call dein#add('andymass/vim-matchup') "extend % behavior
-    call dein#add('machakann/vim-highlightedyank')
     call dein#add('dhruvasagar/vim-table-mode')
 
     " git/github
-    call dein#add('tpope/vim-fugitive') "git extension
+    call dein#add('lambdalisue/gina.vim') "git extension
     call dein#add('tpope/vim-rhubarb') "github extension
     call dein#add('airblade/vim-gitgutter') "adds git diff
 
     " colors
     call dein#add('chrisbra/colorizer') "converts color codes to colors
     call dein#add('mhartington/oceanic-next') "syntax theme
+    call dein#add('chriskempson/base16-vim')
     call dein#add('jackguo380/vim-lsp-cxx-highlight')
     call dein#add('mboughaba/i3config.vim') "i3 config syntax highlighting
     call dein#add('connorholyday/vim-snazzy')
@@ -146,6 +146,7 @@ let g:airline_theme='oceanicnext'
 let g:airline#extensions#tabline#enabled = 1
 map <C-j> :bn<CR>
 map <C-k> :bp<CR>
+map <C-m> :bd<CR>
 
 "NerdCommenter
 let g:NERDSpaceDelims = 1
@@ -200,6 +201,7 @@ map  <Leader>w <Plug>(easymotion-bd-w)
 nmap <Leader>w <Plug>(easymotion-overwin-w)
 
 "Coc
+nnoremap <silent> <space>y  :<C-u>CocList -A --normal yank<cr>
 " if hidden is not set, TextEdit might fail.
 set hidden
 
