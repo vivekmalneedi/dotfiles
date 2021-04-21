@@ -13,3 +13,4 @@ zsh/.zsh_plugins.sh
 nvim/.config/nvim/.netrwhist
 mpDris2.service
 __pycache__/
+packer_compiled.vim

@@ -29,8 +29,8 @@ vim.cmd('map <C-m> :bd<CR>')
 require('packer').startup(function(use)
     -- general
     use 'wbthomason/packer.nvim'
-    use 'folke/tokyonight.nvim'
     use 'mhartington/oceanic-next'
+    use 'bluz71/vim-nightfly-guicolors'
     use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
     use 'windwp/nvim-autopairs'
 
@@ -56,7 +56,7 @@ require('packer').startup(function(use)
         config = function()
             require('lualine').setup{
                 options = {
-                    theme = 'oceanicnext',
+                    theme = 'nightfly',
                 },
                 sections = {
                     lualine_a = { {'mode', upper = true} },
@@ -85,12 +85,15 @@ require('packer').startup(function(use)
     use 'lambdalisue/gina.vim'
     use 'mboughaba/i3config.vim'
     use 'ntpeters/vim-better-whitespace'
+    use {'kyazdani42/nvim-tree.lua',
+        requires = {'kyazdani42/nvim-web-devicons'},
+    }
 end)
 
 -- syntax and colors
 vim.cmd('filetype plugin indent on')
 vim.cmd('syntax enable')
-vim.cmd('colorscheme OceanicNext')
+vim.cmd('colorscheme nightfly')
 
 require'nvim-treesitter.configs'.setup {
     ensure_installed = "maintained",
@@ -103,6 +106,9 @@ require'nvim-treesitter.configs'.setup {
 }
 -- vim.cmd('set foldmethod=expr')
 -- vim.cmd('set foldexpr=nvim_treesitter#foldexpr()')
+
+-- nvim-tree
+vim.cmd('nnoremap <C-n> :NvimTreeToggle<CR>')
 
 -- bufferline
 vim.cmd([[let bufferline = get(g:, 'bufferline', {})]])
