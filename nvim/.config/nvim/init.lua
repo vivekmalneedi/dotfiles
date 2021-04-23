@@ -21,9 +21,9 @@ vim.bo.shiftwidth = 4
 vim.bo.tabstop = 4
 
 -- keybinds
-vim.cmd('map <C-j> :bn<CR>')
-vim.cmd('map <C-k> :bp<CR>')
-vim.cmd('map <C-m> :bd<CR>')
+vim.api.nvim_set_keymap("n", "<C-j>", "<cmd>bn<cr>", {noremap = true})
+vim.api.nvim_set_keymap("n", "<C-k>", "<cmd>bp<cr>", {noremap = true})
+vim.api.nvim_set_keymap("n", "<C-m>", "<cmd>bd<cr>", {noremap = true})
 
 -- plugins
 require('packer').startup(function(use)
@@ -35,6 +35,8 @@ require('packer').startup(function(use)
     use 'windwp/nvim-autopairs'
 
     -- lsp
+    use 'kosayoda/nvim-lightbulb'
+    use 'nvim-lua/lsp-status.nvim'
     use 'hrsh7th/nvim-compe'
     use 'neovim/nvim-lspconfig'
     use {
@@ -61,7 +63,7 @@ require('packer').startup(function(use)
                 sections = {
                     lualine_a = { {'mode', upper = true} },
                     lualine_b = { {'branch', icon = ''} },
-                    lualine_c = { {'filename', file_status = true} },
+                    lualine_c = { {'filename', file_status = true}, GetLspMessages },
                     lualine_x = { 'encoding', 'fileformat', 'filetype' },
                     lualine_y = { 'progress' },
                     lualine_z = { 'location', {'diagnostics', sources = {'nvim_lsp'}}},
@@ -88,6 +90,13 @@ require('packer').startup(function(use)
     use {'kyazdani42/nvim-tree.lua',
         requires = {'kyazdani42/nvim-web-devicons'},
     }
+    use 'tjdevries/train.nvim'
+    use {
+        "blackCauldron7/surround.nvim",
+        config = function()
+            require "surround".setup {}
+        end
+    }
 end)
 
 -- syntax and colors
@@ -108,7 +117,7 @@ require'nvim-treesitter.configs'.setup {
 -- vim.cmd('set foldexpr=nvim_treesitter#foldexpr()')
 
 -- nvim-tree
-vim.cmd('nnoremap <C-n> :NvimTreeToggle<CR>')
+vim.api.nvim_set_keymap("n", "<C-n>", "<cmd>NvimTreeToggle<cr>", {noremap = true})
 
 -- bufferline
 vim.cmd([[let bufferline = get(g:, 'bufferline', {})]])
@@ -138,12 +147,23 @@ end
 remap('i' , '<CR>','v:lua.MUtils.completion_confirm()', {expr = true , noremap = true})
 
 -- telescope
-vim.cmd("nnoremap <leader>ff <cmd>lua require('telescope.builtin').find_files()<cr>")
-vim.cmd("nnoremap <leader>fg <cmd>lua require('telescope.builtin').live_grep()<cr>")
-vim.cmd("nnoremap <leader>fb <cmd>lua require('telescope.builtin').buffers()<cr>")
-vim.cmd("nnoremap <leader>fh <cmd>lua require('telescope.builtin').help_tags()<cr>")
+vim.api.nvim_set_keymap("n", "<leader>ff", "<cmd>lua require('telescope.builtin').find_files()<cr>", {noremap = true})
+vim.api.nvim_set_keymap("n", "<leader>fg", "<cmd>lua require('telescope.builtin').live_grep()<cr>", {noremap = true})
+vim.api.nvim_set_keymap("n", "<leader>fb", "<cmd>lua require('telescope.builtin').buffers()<cr>", {noremap = true})
+vim.api.nvim_set_keymap("n", "<leader>fs", "<cmd>lua require('telescope.builtin').lsp_document_symbols()<cr>", {noremap = true})
+vim.api.nvim_set_keymap("n", "<leader>fa", "<cmd>lua require('telescope.builtin').lsp_workspace_symbols()<cr>", {noremap = true})
 
 -- lsp
+vim.cmd [[autocmd CursorHold,CursorHoldI * lua require'nvim-lightbulb'.update_lightbulb{
+    sign = {
+        enabled = false
+    },
+    virtual_text = {
+        enabled = true,
+        text = "💡",
+    }
+}]]
+
 require'compe'.setup {
     enabled = true;
     autocomplete = true;
@@ -169,60 +189,114 @@ require'compe'.setup {
 }
 
 local nvim_lsp = require('lspconfig')
+local lsp_status = require('lsp-status')
+lsp_status.register_progress()
+
 local on_attach = function(client, bufnr)
-  local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
-  local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
+    local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
+    local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
 
-  buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
+    buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
 
-  -- Mappings.
-  local opts = { noremap=true, silent=true }
-  buf_set_keymap('n', 'gD', '<Cmd>lua vim.lsp.buf.declaration()<CR>', opts)
-  buf_set_keymap('n', 'gd', '<Cmd>lua vim.lsp.buf.definition()<CR>', opts)
-  buf_set_keymap('n', 'K', '<Cmd>lua vim.lsp.buf.hover()<CR>', opts)
-  buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
-  buf_set_keymap('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
-  buf_set_keymap('n', '<space>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
-  buf_set_keymap('n', '<space>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
-  buf_set_keymap('n', '<space>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
-  buf_set_keymap('n', '<space>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
-  buf_set_keymap('n', '<space>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
-  buf_set_keymap('n', '<space>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
-  buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
-  buf_set_keymap('n', '<space>e', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
-  buf_set_keymap('n', '[d', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', opts)
-  buf_set_keymap('n', ']d', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
-  buf_set_keymap('n', '<space>q', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
+    -- Mappings.
+    local opts = { noremap=true, silent=true }
+    buf_set_keymap('n', 'gD', '<Cmd>lua vim.lsp.buf.declaration()<CR>', opts)
+    buf_set_keymap('n', 'gd', '<Cmd>lua vim.lsp.buf.definition()<CR>', opts)
+    buf_set_keymap('n', 'K', '<Cmd>lua vim.lsp.buf.hover()<CR>', opts)
+    buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
+    buf_set_keymap('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
+    buf_set_keymap('n', '<space>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
+    buf_set_keymap('n', '<space>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
+    buf_set_keymap('n', '<space>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
+    buf_set_keymap('n', '<space>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
+    buf_set_keymap('n', '<space>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
+    buf_set_keymap('n', '<space>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
+    buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
+    buf_set_keymap('n', '<space>e', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
+    buf_set_keymap('n', '[d', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', opts)
+    buf_set_keymap('n', ']d', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
+    buf_set_keymap('n', '<space>q', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
 
-  -- Set some keybinds conditional on server capabilities
-  if client.resolved_capabilities.document_formatting then
-    buf_set_keymap("n", "<space>f", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
-  end
-  if client.resolved_capabilities.document_range_formatting then
-    buf_set_keymap("v", "<space>f", "<cmd>lua vim.lsp.buf.range_formatting()<CR>", opts)
-  end
+    -- Set some keybinds conditional on server capabilities
+    if client.resolved_capabilities.document_formatting then
+        buf_set_keymap("n", "<space>f", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
+    end
+    if client.resolved_capabilities.document_range_formatting then
+        buf_set_keymap("v", "<space>f", "<cmd>lua vim.lsp.buf.range_formatting()<CR>", opts)
+    end
 
-  -- Set autocommands conditional on server_capabilities
-  if client.resolved_capabilities.document_highlight then
-    vim.api.nvim_exec([[
-      hi LspReferenceRead cterm=bold ctermbg=red guibg=LightYellow
-      hi LspReferenceText cterm=bold ctermbg=red guibg=LightYellow
-      hi LspReferenceWrite cterm=bold ctermbg=red guibg=LightYellow
-      augroup lsp_document_highlight
+    -- Set autocommands conditional on server_capabilities
+    if client.resolved_capabilities.document_highlight then
+        vim.api.nvim_exec([[
+        hi LspReferenceRead cterm=bold ctermbg=red guibg=LightYellow
+        hi LspReferenceText cterm=bold ctermbg=red guibg=LightYellow
+        hi LspReferenceWrite cterm=bold ctermbg=red guibg=LightYellow
+        augroup lsp_document_highlight
         autocmd! * <buffer>
         autocmd CursorHold <buffer> lua vim.lsp.buf.document_highlight()
         autocmd CursorMoved <buffer> lua vim.lsp.buf.clear_references()
-      augroup END
-    ]], false)
-  end
+        augroup END
+            ]], false)
+    end
+    lsp_status.on_attach(client)
 end
 
-local servers = { "pyright", "rust_analyzer", "clangd", "jsonls", "yamlls", "bashls", "jdtls", "cmake", "dockerls"}
+local spinner_frames = { '⣷', '⣯', '⣟', '⡿', '⢿', '⣻', '⣾', '⣽'}
+GetLspMessages = function()
+    local buf_messages = lsp_status.messages()
+    local msgs = {}
+    local last
+    for _, msg in ipairs(buf_messages) do
+        local name = msg.name
+        local client_name = '[' .. name .. ']'
+        local contents
+        if msg.progress then
+            contents = msg.title
+            if msg.message then contents = contents .. ' ' .. msg.message end
+
+            if msg.percentage then contents = contents .. ' (' .. msg.percentage .. ')' end
+            if msg.spinner then
+                contents = spinner_frames[(msg.spinner % #spinner_frames) + 1] .. ' ' ..
+                    contents
+            end
+        elseif msg.status then
+            contents = msg.content
+            if msg.uri then
+                local filename = vim.uri_to_fname(msg.uri)
+                filename = vim.fn.fnamemodify(filename, ':~:.')
+                local space = math.min(60, math.floor(0.6 * vim.fn.winwidth(0)))
+                if #filename > space then filename = vim.fn.pathshorten(filename) end
+
+                contents = '(' .. filename .. ') ' .. contents
+            end
+        else
+            contents = msg.content
+        end
+
+        table.insert(msgs, client_name .. ' ' .. contents)
+        last = client_name .. ' ' .. contents
+    end
+    return last
+end
+
+local servers = { "pyright", "rust_analyzer", "jsonls", "yamlls", "bashls", "jdtls", "cmake", "dockerls"}
 for _, lsp in ipairs(servers) do
-  nvim_lsp[lsp].setup { on_attach = on_attach }
+    nvim_lsp[lsp].setup {
+        on_attach = on_attach,
+        capabilities = lsp_status.capabilities
+    }
 end
 
-require'lspconfig'.sumneko_lua.setup {
+nvim_lsp.clangd.setup({
+    handlers = lsp_status.extensions.clangd.setup(),
+    init_options = {
+        clangdFileStatus = true
+    },
+    on_attach = on_attach,
+    capabilities = lsp_status.capabilities
+})
+
+nvim_lsp.sumneko_lua.setup {
     cmd = {"lua-language-server"};
     settings = {
         Lua = {
