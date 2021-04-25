@@ -1,9 +1,16 @@
+-- options
 vim.o.completeopt = "menuone,noselect"
 vim.o.autoread = true
 vim.o.mouse = 'a'
 vim.o.termguicolors = true
 vim.o.splitbelow = true
 vim.o.splitright = true
+vim.wo.number = true
+vim.wo.relativenumber = true
+vim.bo.expandtab = true
+vim.bo.autoindent = true
+vim.bo.shiftwidth = 4
+vim.bo.tabstop = 4
 vim.cmd('set clipboard=unnamed,unnamedplus')
 vim.cmd([[let mapleader="\<SPACE>"]])
 
@@ -12,18 +19,13 @@ vim.o.smartcase = true
 vim.o.incsearch = true
 vim.o.ignorecase = true
 
-vim.wo.number = true
-vim.wo.relativenumber = true
-
-vim.bo.expandtab = true
-vim.bo.autoindent = true
-vim.bo.shiftwidth = 4
-vim.bo.tabstop = 4
-
 -- keybinds
 vim.api.nvim_set_keymap("n", "<C-j>", "<cmd>bn<cr>", {noremap = true})
 vim.api.nvim_set_keymap("n", "<C-k>", "<cmd>bp<cr>", {noremap = true})
 vim.api.nvim_set_keymap("n", "<C-m>", "<cmd>bd<cr>", {noremap = true})
+
+-- highlighted yank
+vim.cmd('au TextYankPost * silent! lua vim.highlight.on_yank {higroup="IncSearch", timeout=150, on_visual=true}')
 
 -- plugins
 require('packer').startup(function(use)
@@ -321,6 +323,8 @@ nvim_lsp.sumneko_lua.setup {
             },
         },
     },
+    on_attach = on_attach,
+    capabilities = lsp_status.capabilities
 }
 
 -- tab completion
