@@ -1,6 +1,5 @@
 -- options
 vim.o.completeopt = "menuone,noselect"
-vim.o.autoread = true
 vim.o.mouse = 'a'
 vim.o.termguicolors = true
 vim.o.splitbelow = true
@@ -28,6 +27,16 @@ vim.api.nvim_set_keymap("n", "<C-m>", "<cmd>bd<cr>", {noremap = true})
 vim.cmd('au TextYankPost * silent! lua vim.highlight.on_yank {higroup="IncSearch", timeout=150, on_visual=true}')
 
 -- plugins
+local execute = vim.api.nvim_command
+local fn = vim.fn
+
+local install_path = fn.stdpath('data')..'/site/pack/packer/opt/packer.nvim'
+
+if fn.empty(fn.glob(install_path)) > 0 then
+  fn.system({'git', 'clone', 'https://github.com/wbthomason/packer.nvim', install_path})
+  execute 'packadd packer.nvim'
+end
+
 require('packer').startup(function(use)
     -- general
     use 'wbthomason/packer.nvim'
@@ -89,9 +98,7 @@ require('packer').startup(function(use)
     use 'lambdalisue/gina.vim'
     use 'mboughaba/i3config.vim'
     use 'ntpeters/vim-better-whitespace'
-    use {'kyazdani42/nvim-tree.lua',
-        requires = {'kyazdani42/nvim-web-devicons'},
-    }
+    use {'ms-jpq/chadtree', branch = 'chad', run = 'CHADdeps'}
     use 'tjdevries/train.nvim'
     use {
         "blackCauldron7/surround.nvim",
@@ -118,8 +125,8 @@ require'nvim-treesitter.configs'.setup {
 -- vim.cmd('set foldmethod=expr')
 -- vim.cmd('set foldexpr=nvim_treesitter#foldexpr()')
 
--- nvim-tree
-vim.api.nvim_set_keymap("n", "<C-n>", "<cmd>NvimTreeToggle<cr>", {noremap = true})
+-- chadtree
+vim.api.nvim_set_keymap("n", "<C-n>", "<cmd>CHADopen<cr>", {noremap = true})
 
 -- bufferline
 vim.cmd([[let bufferline = get(g:, 'bufferline', {})]])
