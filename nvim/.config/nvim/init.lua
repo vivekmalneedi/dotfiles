@@ -6,10 +6,12 @@ vim.o.splitbelow = true
 vim.o.splitright = true
 vim.wo.number = true
 vim.wo.relativenumber = true
+vim.o.expandtab = true
 vim.bo.expandtab = true
-vim.bo.autoindent = true
+vim.o.autoindent = true
+vim.o.shiftwidth = 4
 vim.bo.shiftwidth = 4
-vim.bo.tabstop = 4
+vim.o.tabstop = 4
 vim.cmd('set clipboard=unnamed,unnamedplus')
 vim.cmd([[let mapleader="\<SPACE>"]])
 
@@ -18,10 +20,10 @@ vim.o.smartcase = true
 vim.o.incsearch = true
 vim.o.ignorecase = true
 
--- keybinds
-vim.api.nvim_set_keymap("n", "<C-j>", "<cmd>bn<cr>", {noremap = true})
-vim.api.nvim_set_keymap("n", "<C-k>", "<cmd>bp<cr>", {noremap = true})
-vim.api.nvim_set_keymap("n", "<C-m>", "<cmd>bd<cr>", {noremap = true})
+-- Permanent undo
+vim.o.undodir = '~/.vimdid'
+vim.o.undofile = true
+vim.bo.undofile = true
 
 -- highlighted yank
 vim.cmd('au TextYankPost * silent! lua vim.highlight.on_yank {higroup="IncSearch", timeout=150, on_visual=true}')
@@ -33,8 +35,8 @@ local fn = vim.fn
 local install_path = fn.stdpath('data')..'/site/pack/packer/opt/packer.nvim'
 
 if fn.empty(fn.glob(install_path)) > 0 then
-  fn.system({'git', 'clone', 'https://github.com/wbthomason/packer.nvim', install_path})
-  execute 'packadd packer.nvim'
+    fn.system({'git', 'clone', 'https://github.com/wbthomason/packer.nvim', install_path})
+    execute 'packadd packer.nvim'
 end
 
 require('packer').startup(function(use)
@@ -62,6 +64,14 @@ require('packer').startup(function(use)
     use {
         'romgrk/barbar.nvim',
         requires = {'kyazdani42/nvim-web-devicons'},
+        config = function()
+            -- keybinds
+            vim.api.nvim_set_keymap("n", "<C-j>", "<cmd>BufferNext<cr>", {noremap = true})
+            vim.api.nvim_set_keymap("n", "<C-k>", "<cmd>BufferPrevious<cr>", {noremap = true})
+            vim.api.nvim_set_keymap("n", "<C-m>", "<cmd>BufferClose<cr>", {noremap = true})
+            vim.cmd([[let bufferline = get(g:, 'bufferline', {})]])
+            vim.cmd('let bufferline.auto_hide = v:true')
+        end
     }
     use {
         'hoob3rt/lualine.nvim',
@@ -106,6 +116,19 @@ require('packer').startup(function(use)
             require "surround".setup {}
         end
     }
+    use {
+        "folke/which-key.nvim",
+        config = function()
+            require("which-key").setup {}
+        end
+    }
+    use {
+        "folke/lsp-trouble.nvim",
+        requires = "kyazdani42/nvim-web-devicons",
+        config = function()
+            require("trouble").setup {}
+        end
+    }
 end)
 
 -- syntax and colors
@@ -127,10 +150,6 @@ require'nvim-treesitter.configs'.setup {
 
 -- chadtree
 vim.api.nvim_set_keymap("n", "<C-n>", "<cmd>CHADopen<cr>", {noremap = true})
-
--- bufferline
-vim.cmd([[let bufferline = get(g:, 'bufferline', {})]])
-vim.cmd('let bufferline.auto_hide = v:true')
 
 -- autopairs
 require('nvim-autopairs').setup()
@@ -164,13 +183,13 @@ vim.api.nvim_set_keymap("n", "<leader>fa", "<cmd>lua require('telescope.builtin'
 
 -- lsp
 vim.cmd [[autocmd CursorHold,CursorHoldI * lua require'nvim-lightbulb'.update_lightbulb{
-    sign = {
-        enabled = false
-    },
-    virtual_text = {
-        enabled = true,
-        text = "💡",
-    }
+sign = {
+enabled = false
+},
+virtual_text = {
+enabled = true,
+text = "💡",
+}
 }]]
 
 require'compe'.setup {

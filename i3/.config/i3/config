@@ -51,6 +51,7 @@ bindsym $mod+c exec --no-startup-id rofi -show calc -modi calc -no-show-match -n
 exec --no-startup-id setxkbmap -option caps:escape
 bindsym F7 exec --no-startup-id cautoclick -n 100 -i 1 -p 1
 bindsym $mod+F4 exec --no-startup-id xkill
+# exec --no-startup-id setxkbmap -layout us -option caps:escape
 
 #settings
 for_window [class="^.*"] border pixel 1
