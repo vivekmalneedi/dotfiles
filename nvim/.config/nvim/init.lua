@@ -21,7 +21,7 @@ vim.o.incsearch = true
 vim.o.ignorecase = true
 
 -- Permanent undo
-vim.o.undodir = '~/.vimdid'
+vim.cmd('set undodir=~/.vimdid')
 vim.o.undofile = true
 vim.bo.undofile = true
 
