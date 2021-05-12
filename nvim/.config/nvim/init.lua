@@ -108,7 +108,7 @@ require('packer').startup(function(use)
     use 'lambdalisue/gina.vim'
     use 'mboughaba/i3config.vim'
     use 'ntpeters/vim-better-whitespace'
-    use {'ms-jpq/chadtree', branch = 'chad', run = 'CHADdeps'}
+    use {'ms-jpq/chadtree', branch = 'chad', run = ':CHADdeps'}
     use 'tjdevries/train.nvim'
     use {
         "blackCauldron7/surround.nvim",
@@ -129,6 +129,8 @@ require('packer').startup(function(use)
             require("trouble").setup {}
         end
     }
+    use {'kkoomen/vim-doge', run = ':call doge#install()'}
+    use 'ray-x/lsp_signature.nvim'
 end)
 
 -- syntax and colors
@@ -267,6 +269,12 @@ local on_attach = function(client, bufnr)
             ]], false)
     end
     lsp_status.on_attach(client)
+    require'lsp_signature'.on_attach({
+        bind = true,
+        handler_opts = {
+            border = "single"
+        }
+    })
 end
 
 local spinner_frames = { '⣷', '⣯', '⣟', '⡿', '⢿', '⣻', '⣾', '⣽'}
