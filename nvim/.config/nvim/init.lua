@@ -8,10 +8,10 @@ vim.wo.number = true
 vim.wo.relativenumber = true
 vim.o.expandtab = true
 vim.bo.expandtab = true
-vim.o.autoindent = true
 vim.o.shiftwidth = 4
 vim.bo.shiftwidth = 4
 vim.o.tabstop = 4
+vim.o.hidden = true
 vim.cmd('set clipboard=unnamed,unnamedplus')
 vim.cmd([[let mapleader="\<SPACE>"]])
 
@@ -21,7 +21,6 @@ vim.o.incsearch = true
 vim.o.ignorecase = true
 
 -- Permanent undo
-vim.cmd('set undodir=~/.vimdid')
 vim.o.undofile = true
 vim.bo.undofile = true
 
@@ -129,13 +128,12 @@ require('packer').startup(function(use)
             require("trouble").setup {}
         end
     }
+    use "folke/lua-dev.nvim"
     use {'kkoomen/vim-doge', run = ':call doge#install()'}
     use 'ray-x/lsp_signature.nvim'
 end)
 
 -- syntax and colors
-vim.cmd('filetype plugin indent on')
-vim.cmd('syntax enable')
 vim.cmd('colorscheme nightfly')
 
 require'nvim-treesitter.configs'.setup {
@@ -145,10 +143,17 @@ require'nvim-treesitter.configs'.setup {
     },
     indent = {
         enable = true
-    }
+    },
+    incremental_selection = {
+    enable = true,
+    keymaps = {
+      init_selection = "gnn",
+      node_incremental = "grn",
+      scope_incremental = "grc",
+      node_decremental = "grm",
+    },
+  },
 }
--- vim.cmd('set foldmethod=expr')
--- vim.cmd('set foldexpr=nvim_treesitter#foldexpr()')
 
 -- chadtree
 vim.api.nvim_set_keymap("n", "<C-n>", "<cmd>CHADopen<cr>", {noremap = true})
@@ -332,34 +337,8 @@ nvim_lsp.clangd.setup({
     capabilities = lsp_status.capabilities
 })
 
-nvim_lsp.sumneko_lua.setup {
-    cmd = {"lua-language-server"};
-    settings = {
-        Lua = {
-            runtime = {
-                version = 'LuaJIT',
-                -- Setup your lua path
-                path = vim.split(package.path, ';'),
-            },
-            diagnostics = {
-                -- Get the language server to recognize the `vim` global
-                globals = {'vim'},
-            },
-            workspace = {
-                -- Make the server aware of Neovim runtime files
-                library = {
-                    [vim.fn.expand('$VIMRUNTIME/lua')] = true,
-                    [vim.fn.expand('$VIMRUNTIME/lua/vim/lsp')] = true,
-                },
-            },
-            telemetry = {
-                enable = false,
-            },
-        },
-    },
-    on_attach = on_attach,
-    capabilities = lsp_status.capabilities
-}
+local luadev = require("lua-dev").setup()
+nvim_lsp.sumneko_lua.setup(luadev)
 
 -- tab completion
 local t = function(str)

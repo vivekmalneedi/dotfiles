@@ -30,8 +30,8 @@ block = "temperature"
 [[block]]
 block = "memory"
 display_type = "memory"
-format_mem = "{Mup}%"
-format_swap = "{SUp}%"
+format_mem = "{mem_total_used_percents}%"
+format_swap = "{swap_used_percents}%"
 
 [[block]]
 block = "cpu"
@@ -47,7 +47,7 @@ device = "intel_backlight"
 [[block]]
 block = "battery"
 interval = 5
-format = "{percentage}% {time} {power}"
+format = "{percentage} {time} {power}"
 
 [[block]]
 block = "time"

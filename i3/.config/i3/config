@@ -9,7 +9,6 @@ exec --no-startup-id /usr/lib/mate-polkit/polkit-mate-authentication-agent-1
 exec --no-startup-id nm-applet
 exec --no-startup-id feh --bg-scale $HOME/Pictures/pics/firewatch1440.png
 exec --no-startup-id picom -b
-exec --no-startup-id caffeine
 exec --no-startup-id megasync
 exec --no-startup-id teams
 exec --no-startup-id spotify
@@ -24,7 +23,6 @@ assign [class="TelegramDesktop"] 9: 
 assign [class="Vivado"] 3: 
 
 exec --no-startup-id thunderbird
-# exec --no-startup-id "alacritty --class ncmpcpp -e ncmpcpp -S visualizer"
 exec --no-startup-id i3-msg 'workspace 1: ; exec --no-startup-id firefox'
 exec --no-startup-id telegram-desktop
 exec --no-startup-id udiskie -s
