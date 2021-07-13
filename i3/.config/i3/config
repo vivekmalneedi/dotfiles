@@ -10,7 +10,6 @@ exec --no-startup-id nm-applet
 exec --no-startup-id feh --bg-scale $HOME/Pictures/pics/firewatch1440.png
 exec --no-startup-id picom -b
 exec --no-startup-id megasync
-exec --no-startup-id teams
 exec --no-startup-id spotify
 exec --no-startup-id blueberry-tray
 exec --no-startup-id betterlockscreen -l

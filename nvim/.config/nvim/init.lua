@@ -1,4 +1,5 @@
 -- options
+vim.o.shell = '/bin/bash'
 vim.o.completeopt = "menuone,noselect"
 vim.o.mouse = 'a'
 vim.o.termguicolors = true
@@ -44,10 +45,10 @@ require('packer').startup(function(use)
     use 'mhartington/oceanic-next'
     use 'bluz71/vim-nightfly-guicolors'
     use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
+    use 'nvim-treesitter/playground'
     use 'windwp/nvim-autopairs'
 
     -- lsp
-    use 'kosayoda/nvim-lightbulb'
     use 'nvim-lua/lsp-status.nvim'
     use 'hrsh7th/nvim-compe'
     use 'neovim/nvim-lspconfig'
@@ -104,10 +105,14 @@ require('packer').startup(function(use)
         'nvim-telescope/telescope.nvim',
         requires = {{'nvim-lua/popup.nvim'}, {'nvim-lua/plenary.nvim'}}
     }
+    use 'nvim-telescope/telescope-dap.nvim'
     use 'lambdalisue/gina.vim'
     use 'mboughaba/i3config.vim'
     use 'ntpeters/vim-better-whitespace'
-    use {'ms-jpq/chadtree', branch = 'chad', run = ':CHADdeps'}
+    use {
+        'kyazdani42/nvim-tree.lua',
+        requires = "kyazdani42/nvim-web-devicons",
+    }
     use 'tjdevries/train.nvim'
     use {
         "blackCauldron7/surround.nvim",
@@ -131,6 +136,23 @@ require('packer').startup(function(use)
     use "folke/lua-dev.nvim"
     use {'kkoomen/vim-doge', run = ':call doge#install()'}
     use 'ray-x/lsp_signature.nvim'
+    use 'mfussenegger/nvim-dap'
+    use {"norcalli/nvim-colorizer.lua",
+        config = function()
+            require'colorizer'.setup()
+        end
+    }
+    use {'winston0410/range-highlight.nvim',
+        requires = "winston0410/cmd-parser.nvim",
+        config = function()
+            require'range-highlight'.setup{}
+        end
+    }
+    use {'simrat39/rust-tools.nvim',
+        config = function()
+            require('rust-tools').setup{}
+        end
+    }
 end)
 
 -- syntax and colors
@@ -145,18 +167,57 @@ require'nvim-treesitter.configs'.setup {
         enable = true
     },
     incremental_selection = {
-    enable = true,
-    keymaps = {
-      init_selection = "gnn",
-      node_incremental = "grn",
-      scope_incremental = "grc",
-      node_decremental = "grm",
+        enable = true,
     },
-  },
+    keymaps = {
+        init_selection = "gnn",
+        node_incremental = "grn",
+        scope_incremental = "grc",
+        node_decremental = "grm",
+    },
+    playground = {
+        enable = true,
+        persist_queries = true,
+    },
+    query_linter = {
+        enable = true,
+        use_virtual_text = true,
+        lint_events = {"BufWrite", "CursorHold"},
+    },
 }
 
--- chadtree
-vim.api.nvim_set_keymap("n", "<C-n>", "<cmd>CHADopen<cr>", {noremap = true})
+-- dap
+--[[ require('telescope').load_extension('dap')
+local dap = require('dap')
+dap.adapters.lldb = {
+type = 'executable',
+command = 'lldb-vscode',
+name = "lldb"
+}
+
+
+dap.configurations.cpp = {
+{
+name = "Launch",
+type = "lldb",
+request = "launch",
+program = function()
+return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
+end,
+cwd = '${workspaceFolder}',
+stopOnEntry = false,
+args = {},
+runInTerminal = false,
+},
+}
+
+require('dap.ext.vscode').load_launchjs()
+
+dap.configurations.c = dap.configurations.cpp
+dap.configurations.rust = dap.configurations.cpp ]]
+
+-- nvim-tree
+vim.api.nvim_set_keymap("n", "<C-n>", "<cmd>NvimTreeToggle<cr>", {noremap = true})
 
 -- autopairs
 require('nvim-autopairs').setup()
@@ -189,15 +250,6 @@ vim.api.nvim_set_keymap("n", "<leader>fs", "<cmd>lua require('telescope.builtin'
 vim.api.nvim_set_keymap("n", "<leader>fa", "<cmd>lua require('telescope.builtin').lsp_workspace_symbols()<cr>", {noremap = true})
 
 -- lsp
-vim.cmd [[autocmd CursorHold,CursorHoldI * lua require'nvim-lightbulb'.update_lightbulb{
-sign = {
-enabled = false
-},
-virtual_text = {
-enabled = true,
-text = "💡",
-}
-}]]
 
 require'compe'.setup {
     enabled = true;
@@ -320,7 +372,7 @@ GetLspMessages = function()
     return last
 end
 
-local servers = { "pyright", "rust_analyzer", "jsonls", "yamlls", "bashls", "jdtls", "cmake", "dockerls"}
+local servers = { "pyright", "jsonls", "yamlls", "bashls", "cmake", "dockerls"}
 for _, lsp in ipairs(servers) do
     nvim_lsp[lsp].setup {
         on_attach = on_attach,
@@ -337,8 +389,25 @@ nvim_lsp.clangd.setup({
     capabilities = lsp_status.capabilities
 })
 
-local luadev = require("lua-dev").setup()
+local luadev = require("lua-dev").setup{}
 nvim_lsp.sumneko_lua.setup(luadev)
+
+local util = require 'lspconfig/util'
+local root_pattern = util.root_pattern("veridian.yml", ".git")
+local configs = require'lspconfig/configs'
+configs.veridian = {
+    default_config = {
+        cmd = {"veridian"};
+        filetypes = {"systemverilog", "verilog"};
+        root_dir = function(fname)
+            local filename = util.path.is_absolute(fname) and fname
+                or util.path.join(vim.loop.cwd(), fname)
+            return root_pattern(filename) or util.path.dirname(filename)
+        end;
+        settings = {};
+    };
+}
+nvim_lsp.veridian.setup{on_attach = on_attach}
 
 -- tab completion
 local t = function(str)
