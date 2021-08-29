@@ -46,7 +46,6 @@ require('packer').startup(function(use)
     use 'bluz71/vim-nightfly-guicolors'
     use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
     use 'nvim-treesitter/playground'
-    use 'windwp/nvim-autopairs'
 
     -- lsp
     use 'nvim-lua/lsp-status.nvim'
@@ -160,6 +159,7 @@ require('packer').startup(function(use)
             "hrsh7th/cmp-buffer",
             "hrsh7th/cmp-nvim-lsp",
             "hrsh7th/cmp-path",
+            "windwp/nvim-autopairs",
         },
         config = function()
             local cmp = require'cmp'
@@ -174,6 +174,15 @@ require('packer').startup(function(use)
                     { name = 'buffer' },
                     { name = 'path' }
                 }
+
+            })
+            require('nvim-autopairs').setup({
+                disable_filetype = { "TelescopePrompt" , "vim" },
+            })
+            require("nvim-autopairs.completion.cmp").setup({
+                map_cr = true, --  map <CR> on insert mode
+                map_complete = true, -- it will auto insert `(` after select function or method item
+                auto_select = true -- automatically select the first item
             })
         end
     }
@@ -362,16 +371,16 @@ for _, lsp in ipairs(servers) do
 end
 
 local clangd_capabilities = vim.tbl_deep_extend(
-  'force',
-  capabilities,
-  {
-    textDocument = {
-      completion = {
-        editsNearCursor = true,
-      },
-    },
-    offsetEncoding = { 'utf-8', 'utf-16' },
-  }
+    'force',
+    capabilities,
+    {
+        textDocument = {
+            completion = {
+                editsNearCursor = true,
+            },
+        },
+        offsetEncoding = { 'utf-8', 'utf-16' },
+    }
 )
 nvim_lsp.clangd.setup({
     handlers = lsp_status.extensions.clangd.setup(),
