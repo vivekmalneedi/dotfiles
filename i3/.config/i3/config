@@ -6,6 +6,7 @@ smart_gaps on
 #autostart
 exec --no-startup-id /usr/bin/prime-offload
 exec --no-startup-id /usr/lib/mate-polkit/polkit-mate-authentication-agent-1
+exec --no-startup-id /usr/bin/lxqt-policykit-agent
 exec --no-startup-id nm-applet
 exec --no-startup-id feh --bg-scale $HOME/Pictures/pics/firewatch1440.png
 exec --no-startup-id picom -b

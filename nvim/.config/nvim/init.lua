@@ -50,7 +50,6 @@ require('packer').startup(function(use)
 
     -- lsp
     use 'nvim-lua/lsp-status.nvim'
-    use 'hrsh7th/nvim-compe'
     use 'neovim/nvim-lspconfig'
     use {
         'lewis6991/gitsigns.nvim',
@@ -153,6 +152,31 @@ require('packer').startup(function(use)
             require('rust-tools').setup{}
         end
     }
+    use {"ellisonleao/glow.nvim", run = "GlowInstall"}
+    use 'sindrets/diffview.nvim'
+    use {
+        "hrsh7th/nvim-cmp",
+        requires = {
+            "hrsh7th/cmp-buffer",
+            "hrsh7th/cmp-nvim-lsp",
+            "hrsh7th/cmp-path",
+        },
+        config = function()
+            local cmp = require'cmp'
+            local types = require('cmp.types')
+            cmp.setup({
+                preselect = types.cmp.PreselectMode.None,
+                mapping = {
+                    ['<Tab>'] = cmp.mapping(cmp.mapping.select_next_item(), { 'i', 's' }),
+                },
+                sources = {
+                    { name = 'nvim_lsp' },
+                    { name = 'buffer' },
+                    { name = 'path' }
+                }
+            })
+        end
+    }
 end)
 
 -- syntax and colors
@@ -219,29 +243,6 @@ dap.configurations.rust = dap.configurations.cpp ]]
 -- nvim-tree
 vim.api.nvim_set_keymap("n", "<C-n>", "<cmd>NvimTreeToggle<cr>", {noremap = true})
 
--- autopairs
-require('nvim-autopairs').setup()
-local remap = vim.api.nvim_set_keymap
-local npairs = require('nvim-autopairs')
-
--- skip it, if you use another global object
-_G.MUtils= {}
-
-vim.g.completion_confirm_key = ""
-MUtils.completion_confirm=function()
-    if vim.fn.pumvisible() ~= 0  then
-        if vim.fn.complete_info()["selected"] ~= -1 then
-            return vim.fn["compe#confirm"](npairs.esc("<cr>"))
-        else
-            return npairs.esc("<cr>")
-        end
-    else
-        return npairs.autopairs_cr()
-    end
-end
-
-remap('i' , '<CR>','v:lua.MUtils.completion_confirm()', {expr = true , noremap = true})
-
 -- telescope
 vim.api.nvim_set_keymap("n", "<leader>ff", "<cmd>lua require('telescope.builtin').find_files()<cr>", {noremap = true})
 vim.api.nvim_set_keymap("n", "<leader>fg", "<cmd>lua require('telescope.builtin').live_grep()<cr>", {noremap = true})
@@ -250,30 +251,6 @@ vim.api.nvim_set_keymap("n", "<leader>fs", "<cmd>lua require('telescope.builtin'
 vim.api.nvim_set_keymap("n", "<leader>fa", "<cmd>lua require('telescope.builtin').lsp_workspace_symbols()<cr>", {noremap = true})
 
 -- lsp
-
-require'compe'.setup {
-    enabled = true;
-    autocomplete = true;
-    debug = false;
-    min_length = 1;
-    preselect = 'enable';
-    throttle_time = 80;
-    source_timeout = 200;
-    incomplete_delay = 400;
-    max_abbr_width = 100;
-    max_kind_width = 100;
-    max_menu_width = 100;
-    documentation = true;
-
-    source = {
-        path = true;
-        buffer = true;
-        calc = true;
-        nvim_lsp = true;
-        nvim_lua = true;
-        vsnip = false;
-    };
-}
 
 local nvim_lsp = require('lspconfig')
 local lsp_status = require('lsp-status')
@@ -372,24 +349,44 @@ GetLspMessages = function()
     return last
 end
 
+local capabilities = vim.lsp.protocol.make_client_capabilities()
+capabilities = require('cmp_nvim_lsp').update_capabilities(capabilities)
+vim.tbl_extend('keep', capabilities or {}, lsp_status.capabilities)
+
 local servers = { "pyright", "jsonls", "yamlls", "bashls", "cmake", "dockerls"}
 for _, lsp in ipairs(servers) do
     nvim_lsp[lsp].setup {
         on_attach = on_attach,
-        capabilities = lsp_status.capabilities
+        capabilities = capabilities
     }
 end
 
+local clangd_capabilities = vim.tbl_deep_extend(
+  'force',
+  capabilities,
+  {
+    textDocument = {
+      completion = {
+        editsNearCursor = true,
+      },
+    },
+    offsetEncoding = { 'utf-8', 'utf-16' },
+  }
+)
 nvim_lsp.clangd.setup({
     handlers = lsp_status.extensions.clangd.setup(),
     init_options = {
         clangdFileStatus = true
     },
     on_attach = on_attach,
-    capabilities = lsp_status.capabilities
+    capabilities = clangd_capabilities
 })
 
-local luadev = require("lua-dev").setup{}
+local luadev = require("lua-dev").setup({
+    lspconfig = {
+        cmd = {"lua-language-server"}
+    },
+})
 nvim_lsp.sumneko_lua.setup(luadev)
 
 local util = require 'lspconfig/util'
@@ -408,41 +405,3 @@ configs.veridian = {
     };
 }
 nvim_lsp.veridian.setup{on_attach = on_attach}
-
--- tab completion
-local t = function(str)
-    return vim.api.nvim_replace_termcodes(str, true, true, true)
-end
-
-local check_back_space = function()
-    local col = vim.fn.col('.') - 1
-    if col == 0 or vim.fn.getline('.'):sub(col, col):match('%s') then
-        return true
-    else
-        return false
-    end
-end
-
--- Use (s-)tab to:
---- move to prev/next item in completion menuone
-_G.tab_complete = function()
-    if vim.fn.pumvisible() == 1 then
-        return t "<C-n>"
-    elseif check_back_space() then
-        return t "<Tab>"
-    else
-        return vim.fn['compe#complete']()
-    end
-end
-_G.s_tab_complete = function()
-    if vim.fn.pumvisible() == 1 then
-        return t "<C-p>"
-    else
-        return t "<S-Tab>"
-    end
-end
-
-vim.api.nvim_set_keymap("i", "<Tab>", "v:lua.tab_complete()", {expr = true})
-vim.api.nvim_set_keymap("s", "<Tab>", "v:lua.tab_complete()", {expr = true})
-vim.api.nvim_set_keymap("i", "<S-Tab>", "v:lua.s_tab_complete()", {expr = true})
-vim.api.nvim_set_keymap("s", "<S-Tab>", "v:lua.s_tab_complete()", {expr = true})
