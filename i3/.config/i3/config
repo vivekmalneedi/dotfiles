@@ -3,6 +3,10 @@ gaps inner 5
 gaps outer 0
 smart_gaps on
 
+# Start XDG autostart .desktop files using dex. See also
+# https://wiki.archlinux.org/index.php/XDG_Autostart
+exec --no-startup-id dex --autostart --environment i3
+
 #autostart
 exec --no-startup-id /usr/bin/prime-offload
 exec --no-startup-id /usr/lib/mate-polkit/polkit-mate-authentication-agent-1
@@ -13,14 +17,17 @@ exec --no-startup-id picom -b
 exec --no-startup-id megasync
 exec --no-startup-id spotify
 exec --no-startup-id blueberry-tray
-exec --no-startup-id betterlockscreen -l
+exec --no-startup-id ulauncher --no-window-shadow
+
+# xss-lock grabs a logind suspend inhibit lock and will use i3lock to lock the
+# screen before suspend. Use loginctl lock-session to lock your screen.
+exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
 
 #application autostart
 assign [class="Thunderbird"] 6: 
 assign [class="Microsoft Teams - Preview"] 10: 
 assign [class="Spotify"] 5: 
 assign [class="TelegramDesktop"] 9: 
-assign [class="Vivado"] 3: 
 
 exec --no-startup-id thunderbird
 exec --no-startup-id i3-msg 'workspace 1: ; exec --no-startup-id firefox'
@@ -32,6 +39,7 @@ exec --no-startup-id mons -a
 bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +5%
 bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -5%
 bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle
+bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle
 bindsym XF86MonBrightnessUp exec --no-startup-id pkexec /usr/bin/brillo -A 5
 bindsym XF86MonBrightnessDown exec --no-startup-id pkexec /usr/bin/brillo -U 5
 bindsym XF86AudioPlay exec "mpris-ctl pp"
@@ -39,7 +47,6 @@ bindsym XF86AudioStop exec "mpris-ctl stop"
 bindsym XF86AudioNext exec "mpris-ctl next"
 bindsym XF86AudioPrev exec "mpris-ctl prev"
 bindsym $mod+Return exec --no-startup-id alacritty
-bindsym $mod+d exec --no-startup-id rofi-appsmenu
 bindsym Print exec --no-startup-id maim -s | tee ~/Pictures/$(date +%s).png | xclip -selection clipboard -t image/png
 bindsym $mod+Shift+e exec --no-startup-id $HOME/.config/rofi-power/rofi-power
 bindsym $mod+m exec --no-startup-id rofi-mpc

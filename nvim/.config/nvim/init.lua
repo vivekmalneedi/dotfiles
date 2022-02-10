@@ -1,6 +1,6 @@
 -- options
 vim.o.shell = '/bin/bash'
-vim.o.completeopt = "menuone,noselect"
+vim.o.completeopt = "menu,menuone,noselect"
 vim.o.mouse = 'a'
 vim.o.termguicolors = true
 vim.o.splitbelow = true
@@ -12,37 +12,27 @@ vim.bo.expandtab = true
 vim.o.shiftwidth = 4
 vim.bo.shiftwidth = 4
 vim.o.tabstop = 4
-vim.o.hidden = true
 vim.cmd('set clipboard=unnamed,unnamedplus')
 vim.cmd([[let mapleader="\<SPACE>"]])
 
 -- search
 vim.o.smartcase = true
-vim.o.incsearch = true
 vim.o.ignorecase = true
 
 -- Permanent undo
 vim.o.undofile = true
 vim.bo.undofile = true
 
--- highlighted yank
-vim.cmd('au TextYankPost * silent! lua vim.highlight.on_yank {higroup="IncSearch", timeout=150, on_visual=true}')
-
 -- plugins
-local execute = vim.api.nvim_command
 local fn = vim.fn
-
-local install_path = fn.stdpath('data')..'/site/pack/packer/opt/packer.nvim'
-
+local install_path = fn.stdpath('data')..'/site/pack/packer/start/packer.nvim'
 if fn.empty(fn.glob(install_path)) > 0 then
-    fn.system({'git', 'clone', 'https://github.com/wbthomason/packer.nvim', install_path})
-    execute 'packadd packer.nvim'
+    PACKER_BOOTSTRAP = fn.system({'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path})
 end
 
 require('packer').startup(function(use)
     -- general
     use 'wbthomason/packer.nvim'
-    use 'mhartington/oceanic-next'
     use 'bluz71/vim-nightfly-guicolors'
     use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
     use 'nvim-treesitter/playground'
@@ -80,12 +70,12 @@ require('packer').startup(function(use)
                     theme = 'nightfly',
                 },
                 sections = {
-                    lualine_a = { {'mode', upper = true} },
-                    lualine_b = { {'branch', icon = ''} },
-                    lualine_c = { {'filename', file_status = true}, GetLspMessages },
-                    lualine_x = { 'encoding', 'fileformat', 'filetype' },
-                    lualine_y = { 'progress' },
-                    lualine_z = { 'location', {'diagnostics', sources = {'nvim_lsp'}}},
+                    lualine_a = {'mode'},
+                    lualine_b = {{'branch', icon = ''}, 'diff', {'diagnostics', sources = {'nvim_diagnostic'}} },
+                    lualine_c = {'filename', GetLspMessages},
+                    lualine_x = {'encoding', 'fileformat', 'filetype'},
+                    lualine_y = {'progress'},
+                    lualine_z = {'location'},
                 },
                 inactive_sections = {
                     lualine_a = {  },
@@ -101,7 +91,14 @@ require('packer').startup(function(use)
     use 'b3nj5m1n/kommentary'
     use {
         'nvim-telescope/telescope.nvim',
-        requires = {{'nvim-lua/popup.nvim'}, {'nvim-lua/plenary.nvim'}}
+        requires = {
+            {'nvim-lua/popup.nvim'},
+            {'nvim-lua/plenary.nvim'},
+            {'nvim-telescope/telescope-fzy-native.nvim'}
+        },
+        config = function()
+            require('telescope').load_extension('fzy_native')
+        end
     }
     use 'nvim-telescope/telescope-dap.nvim'
     use 'lambdalisue/gina.vim'
@@ -146,46 +143,73 @@ require('packer').startup(function(use)
             require'range-highlight'.setup{}
         end
     }
-    use {'simrat39/rust-tools.nvim',
-        config = function()
-            require('rust-tools').setup{}
-        end
-    }
+    use {'simrat39/rust-tools.nvim'}
     use {"ellisonleao/glow.nvim", run = "GlowInstall"}
     use 'sindrets/diffview.nvim'
+    use {
+        'saecki/crates.nvim',
+        tag = 'v0.1.0',
+        requires = { 'nvim-lua/plenary.nvim' },
+        config = function()
+            require('crates').setup()
+        end,
+    }
     use {
         "hrsh7th/nvim-cmp",
         requires = {
             "hrsh7th/cmp-buffer",
             "hrsh7th/cmp-nvim-lsp",
             "hrsh7th/cmp-path",
+            "hrsh7th/cmp-cmdline",
             "windwp/nvim-autopairs",
+            "L3MON4D3/LuaSnip",
+            "saadparwaiz1/cmp_luasnip",
         },
         config = function()
-            local cmp = require'cmp'
+            local cmp = require('cmp')
             local types = require('cmp.types')
             cmp.setup({
+                snippet = {
+                    expand = function(args)
+                        require('luasnip').lsp_expand(args.body)
+                    end,
+                },
                 preselect = types.cmp.PreselectMode.None,
                 mapping = {
                     ['<Tab>'] = cmp.mapping(cmp.mapping.select_next_item(), { 'i', 's' }),
                 },
-                sources = {
+                sources = cmp.config.sources({
                     { name = 'nvim_lsp' },
+                    { name = 'luasnip' },
                     { name = 'buffer' },
-                    { name = 'path' }
+                    { name = 'path' },
+                    { name = "crates" },
+                })
+            })
+            cmp.setup.cmdline('/', {
+                sources = {
+                    { name = 'buffer' }
                 }
-
+            })
+            cmp.setup.cmdline(':', {
+                sources = cmp.config.sources({
+                    { name = 'path' }
+                }, {
+                        { name = 'cmdline' }
+                    })
             })
             require('nvim-autopairs').setup({
                 disable_filetype = { "TelescopePrompt" , "vim" },
             })
-            require("nvim-autopairs.completion.cmp").setup({
-                map_cr = true, --  map <CR> on insert mode
-                map_complete = true, -- it will auto insert `(` after select function or method item
-                auto_select = true -- automatically select the first item
-            })
+            local cmp_autopairs = require('nvim-autopairs.completion.cmp')
+            cmp.event:on( 'confirm_done',
+                cmp_autopairs.on_confirm_done({  map_char = { tex = '' } }))
+
         end
     }
+    if PACKER_BOOTSTRAP then
+        require('packer').sync()
+    end
 end)
 
 -- syntax and colors
@@ -218,36 +242,6 @@ require'nvim-treesitter.configs'.setup {
         lint_events = {"BufWrite", "CursorHold"},
     },
 }
-
--- dap
---[[ require('telescope').load_extension('dap')
-local dap = require('dap')
-dap.adapters.lldb = {
-type = 'executable',
-command = 'lldb-vscode',
-name = "lldb"
-}
-
-
-dap.configurations.cpp = {
-{
-name = "Launch",
-type = "lldb",
-request = "launch",
-program = function()
-return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
-end,
-cwd = '${workspaceFolder}',
-stopOnEntry = false,
-args = {},
-runInTerminal = false,
-},
-}
-
-require('dap.ext.vscode').load_launchjs()
-
-dap.configurations.c = dap.configurations.cpp
-dap.configurations.rust = dap.configurations.cpp ]]
 
 -- nvim-tree
 vim.api.nvim_set_keymap("n", "<C-n>", "<cmd>NvimTreeToggle<cr>", {noremap = true})
@@ -398,19 +392,16 @@ local luadev = require("lua-dev").setup({
 })
 nvim_lsp.sumneko_lua.setup(luadev)
 
-local util = require 'lspconfig/util'
-local root_pattern = util.root_pattern("veridian.yml", ".git")
-local configs = require'lspconfig/configs'
-configs.veridian = {
-    default_config = {
-        cmd = {"veridian"};
-        filetypes = {"systemverilog", "verilog"};
-        root_dir = function(fname)
-            local filename = util.path.is_absolute(fname) and fname
-                or util.path.join(vim.loop.cwd(), fname)
-            return root_pattern(filename) or util.path.dirname(filename)
-        end;
-        settings = {};
-    };
+require('rust-tools').setup{
+    server = {
+        on_attach = on_attach,
+        capabilities = capabilities,
+        settings = {
+            ["rust-analyzer"] = {
+                checkOnSave = {
+                    command = "clippy"
+                },
+            }
+        },
+    },
 }
-nvim_lsp.veridian.setup{on_attach = on_attach}

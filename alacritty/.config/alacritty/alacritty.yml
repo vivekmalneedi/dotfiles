@@ -82,8 +82,6 @@ bell:
   duration: 0
   color: "0xffffff"
 
-background_opacity: 1.0
-
 mouse_bindings:
   - { mouse: Middle, action: PasteSelection }
 
