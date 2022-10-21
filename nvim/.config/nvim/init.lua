@@ -110,12 +110,6 @@ require('packer').startup(function(use)
     }
     use 'tjdevries/train.nvim'
     use {
-        "blackCauldron7/surround.nvim",
-        config = function()
-            require "surround".setup {}
-        end
-    }
-    use {
         "folke/which-key.nvim",
         config = function()
             require("which-key").setup {}
@@ -128,7 +122,7 @@ require('packer').startup(function(use)
             require("trouble").setup {}
         end
     }
-    use "folke/lua-dev.nvim"
+    use "folke/neodev.nvim"
     use {'kkoomen/vim-doge', run = ':call doge#install()'}
     use 'ray-x/lsp_signature.nvim'
     use 'mfussenegger/nvim-dap'
@@ -216,7 +210,7 @@ end)
 vim.cmd('colorscheme nightfly')
 
 require'nvim-treesitter.configs'.setup {
-    ensure_installed = "maintained",
+    ensure_installed = "all",
     highlight = {
         enable = true,
     },
@@ -254,65 +248,104 @@ vim.api.nvim_set_keymap("n", "<leader>fs", "<cmd>lua require('telescope.builtin'
 vim.api.nvim_set_keymap("n", "<leader>fa", "<cmd>lua require('telescope.builtin').lsp_workspace_symbols()<cr>", {noremap = true})
 
 -- lsp
-
 local nvim_lsp = require('lspconfig')
 local lsp_status = require('lsp-status')
 lsp_status.register_progress()
 
-local on_attach = function(client, bufnr)
-    local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
-    local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
+local opts = { noremap=true, silent=true }
+vim.keymap.set('n', '<space>e', vim.diagnostic.open_float, opts)
+vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, opts)
+vim.keymap.set('n', ']d', vim.diagnostic.goto_next, opts)
+vim.keymap.set('n', '<space>q', vim.diagnostic.setloclist, opts)
 
-    buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
+-- Use an on_attach function to only map the following keys
+-- after the language server attaches to the current buffer
+local on_attach = function(client, bufnr)
+    -- Enable completion triggered by <c-x><c-o>
+    vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
 
     -- Mappings.
-    local opts = { noremap=true, silent=true }
-    buf_set_keymap('n', 'gD', '<Cmd>lua vim.lsp.buf.declaration()<CR>', opts)
-    buf_set_keymap('n', 'gd', '<Cmd>lua vim.lsp.buf.definition()<CR>', opts)
-    buf_set_keymap('n', 'K', '<Cmd>lua vim.lsp.buf.hover()<CR>', opts)
-    buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
-    buf_set_keymap('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
-    buf_set_keymap('n', '<space>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
-    buf_set_keymap('n', '<space>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
-    buf_set_keymap('n', '<space>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
-    buf_set_keymap('n', '<space>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
-    buf_set_keymap('n', '<space>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
-    buf_set_keymap('n', '<space>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
-    buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
-    buf_set_keymap('n', '<space>e', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
-    buf_set_keymap('n', '[d', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', opts)
-    buf_set_keymap('n', ']d', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
-    buf_set_keymap('n', '<space>q', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
+    -- See `:help vim.lsp.*` for documentation on any of the below functions
+    local bufopts = { noremap=true, silent=true, buffer=bufnr }
+    vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts)
+    vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
+    vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
+    vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
+    vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, bufopts)
+    vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder, bufopts)
+    vim.keymap.set('n', '<space>wr', vim.lsp.buf.remove_workspace_folder, bufopts)
+    vim.keymap.set('n', '<space>wl', function()
+        print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+    end, bufopts)
+    vim.keymap.set('n', '<space>D', vim.lsp.buf.type_definition, bufopts)
+    vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename, bufopts)
+    vim.keymap.set('n', '<space>ca', vim.lsp.buf.code_action, bufopts)
+    vim.keymap.set('n', 'gr', vim.lsp.buf.references, bufopts)
+    vim.keymap.set('n', '<space>f', function() vim.lsp.buf.format { async = true } end, bufopts)
 
-    -- Set some keybinds conditional on server capabilities
-    if client.resolved_capabilities.document_formatting then
-        buf_set_keymap("n", "<space>f", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
-    end
-    if client.resolved_capabilities.document_range_formatting then
-        buf_set_keymap("v", "<space>f", "<cmd>lua vim.lsp.buf.range_formatting()<CR>", opts)
+    if client.server_capabilities.documentRangeFormattingProvider then
+        vim.keymap.set("v", "<space>f", "<cmd>lua vim.lsp.buf.range_formatting()<CR>", opts)
     end
 
-    -- Set autocommands conditional on server_capabilities
-    if client.resolved_capabilities.document_highlight then
-        vim.api.nvim_exec([[
-        hi LspReferenceRead cterm=bold ctermbg=red guibg=LightYellow
-        hi LspReferenceText cterm=bold ctermbg=red guibg=LightYellow
-        hi LspReferenceWrite cterm=bold ctermbg=red guibg=LightYellow
-        augroup lsp_document_highlight
-        autocmd! * <buffer>
-        autocmd CursorHold <buffer> lua vim.lsp.buf.document_highlight()
-        autocmd CursorMoved <buffer> lua vim.lsp.buf.clear_references()
-        augroup END
-            ]], false)
-    end
-    lsp_status.on_attach(client)
-    require'lsp_signature'.on_attach({
-        bind = true,
-        handler_opts = {
-            border = "single"
-        }
+    vim.api.nvim_create_augroup('lsp_document_highlight', {
+        clear = false
     })
+    vim.api.nvim_clear_autocmds({
+        buffer = bufnr,
+        group = 'lsp_document_highlight',
+    })
+    if client.server_capabilities.documentHighlightProvider then
+        vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
+            group = 'lsp_document_highlight',
+            buffer = bufnr,
+            callback = vim.lsp.buf.document_highlight,
+        })
+        vim.api.nvim_create_autocmd('CursorMoved', {
+            group = 'lsp_document_highlight',
+            buffer = bufnr,
+            callback = vim.lsp.buf.clear_references,
+        })
+    end
+
+    lsp_status.on_attach(client)
 end
+
+require'lsp_signature'.setup({})
+require("neodev").setup({})
+
+local capabilities = require('cmp_nvim_lsp').default_capabilities()
+capabilities = vim.tbl_extend('keep', capabilities or {}, lsp_status.capabilities)
+
+local servers = { "pyright", "jsonls", "yamlls", "bashls", "cmake", "dockerls", "sumneko_lua"}
+for _, lsp in ipairs(servers) do
+    nvim_lsp[lsp].setup {
+        on_attach = on_attach,
+        capabilities = capabilities
+    }
+end
+
+nvim_lsp.clangd.setup({
+    handlers = lsp_status.extensions.clangd.setup(),
+    init_options = {
+        clangdFileStatus = true
+    },
+    on_attach = on_attach,
+    capabilities = capabilities
+})
+
+require('rust-tools').setup{
+    server = {
+        on_attach = on_attach,
+        capabilities = capabilities,
+        settings = {
+            ["rust-analyzer"] = {
+                checkOnSave = {
+                    command = "clippy"
+                },
+            }
+        },
+    },
+}
 
 local spinner_frames = { '⣷', '⣯', '⣟', '⡿', '⢿', '⣻', '⣾', '⣽'}
 GetLspMessages = function()
@@ -330,7 +363,7 @@ GetLspMessages = function()
             if msg.percentage then contents = contents .. ' (' .. msg.percentage .. ')' end
             if msg.spinner then
                 contents = spinner_frames[(msg.spinner % #spinner_frames) + 1] .. ' ' ..
-                    contents
+                contents
             end
         elseif msg.status then
             contents = msg.content
@@ -352,56 +385,3 @@ GetLspMessages = function()
     return last
 end
 
-local capabilities = vim.lsp.protocol.make_client_capabilities()
-capabilities = require('cmp_nvim_lsp').update_capabilities(capabilities)
-vim.tbl_extend('keep', capabilities or {}, lsp_status.capabilities)
-
-local servers = { "pyright", "jsonls", "yamlls", "bashls", "cmake", "dockerls"}
-for _, lsp in ipairs(servers) do
-    nvim_lsp[lsp].setup {
-        on_attach = on_attach,
-        capabilities = capabilities
-    }
-end
-
-local clangd_capabilities = vim.tbl_deep_extend(
-    'force',
-    capabilities,
-    {
-        textDocument = {
-            completion = {
-                editsNearCursor = true,
-            },
-        },
-        offsetEncoding = { 'utf-8', 'utf-16' },
-    }
-)
-nvim_lsp.clangd.setup({
-    handlers = lsp_status.extensions.clangd.setup(),
-    init_options = {
-        clangdFileStatus = true
-    },
-    on_attach = on_attach,
-    capabilities = clangd_capabilities
-})
-
-local luadev = require("lua-dev").setup({
-    lspconfig = {
-        cmd = {"lua-language-server"}
-    },
-})
-nvim_lsp.sumneko_lua.setup(luadev)
-
-require('rust-tools').setup{
-    server = {
-        on_attach = on_attach,
-        capabilities = capabilities,
-        settings = {
-            ["rust-analyzer"] = {
-                checkOnSave = {
-                    command = "clippy"
-                },
-            }
-        },
-    },
-}
