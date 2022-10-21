@@ -72,7 +72,7 @@ require('packer').startup(function(use)
                 sections = {
                     lualine_a = {'mode'},
                     lualine_b = {{'branch', icon = ''}, 'diff', {'diagnostics', sources = {'nvim_diagnostic'}} },
-                    lualine_c = {'filename', GetLspMessages},
+                    lualine_c = {'filename', GetLspMessages, GetCurrentFunction},
                     lualine_x = {'encoding', 'fileformat', 'filetype'},
                     lualine_y = {'progress'},
                     lualine_z = {'location'},
@@ -250,6 +250,9 @@ vim.api.nvim_set_keymap("n", "<leader>fa", "<cmd>lua require('telescope.builtin'
 -- lsp
 local nvim_lsp = require('lspconfig')
 local lsp_status = require('lsp-status')
+lsp_status.config {
+    diagnostics = false
+}
 lsp_status.register_progress()
 
 local opts = { noremap=true, silent=true }
@@ -347,11 +350,14 @@ require('rust-tools').setup{
     },
 }
 
+-- adapted from lsp_status
+-- added `last` variable to only print latest message from server
+-- removed uri from clangd status since lualine already handles it
 local spinner_frames = { '⣷', '⣯', '⣟', '⡿', '⢿', '⣻', '⣾', '⣽'}
 GetLspMessages = function()
     local buf_messages = lsp_status.messages()
     local msgs = {}
-    local last
+    local last = ""
     for _, msg in ipairs(buf_messages) do
         local name = msg.name
         local client_name = '[' .. name .. ']'
@@ -365,16 +371,6 @@ GetLspMessages = function()
                 contents = spinner_frames[(msg.spinner % #spinner_frames) + 1] .. ' ' ..
                 contents
             end
-        elseif msg.status then
-            contents = msg.content
-            if msg.uri then
-                local filename = vim.uri_to_fname(msg.uri)
-                filename = vim.fn.fnamemodify(filename, ':~:.')
-                local space = math.min(60, math.floor(0.6 * vim.fn.winwidth(0)))
-                if #filename > space then filename = vim.fn.pathshorten(filename) end
-
-                contents = '(' .. filename .. ') ' .. contents
-            end
         else
             contents = msg.content
         end
@@ -383,5 +379,10 @@ GetLspMessages = function()
         last = client_name .. ' ' .. contents
     end
     return last
+end
+
+GetCurrentFunction = function()
+    lsp_status.update_current_function()
+    return vim.b.lsp_current_function
 end
 
