@@ -274,6 +274,7 @@ require('packer').startup(function(use)
         config = function()
             local cmp = require('cmp')
             local types = require('cmp.types')
+            local compare = require('cmp.config.compare')
             local luasnip = require('luasnip')
             -- supertab mapping from https://github.com/hrsh7th/nvim-cmp/wiki/Example-mappings
             local has_words_before = function()
@@ -331,6 +332,19 @@ require('packer').startup(function(use)
                         end
                         return require('lspkind').cmp_format({ with_text = false })(entry, vim_item)
                     end
+                },
+                sorting = {
+                    comparators = {
+                        compare.offset,
+                        compare.exact,
+                        require("clangd_extensions.cmp_scores"),
+                        compare.recently_used,
+                        compare.locality,
+                        compare.kind,
+                        compare.sort_text,
+                        compare.length,
+                        compare.order,
+                    },
                 },
             })
             cmp.setup.cmdline('/', {
