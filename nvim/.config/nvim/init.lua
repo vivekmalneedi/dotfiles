@@ -287,7 +287,6 @@ require('packer').startup(function(use)
                         require('luasnip').lsp_expand(args.body)
                     end,
                 },
-                preselect = types.cmp.PreselectMode.None,
                 mapping = {
                     ["<Tab>"] = cmp.mapping(function(fallback)
                         if cmp.visible() then
