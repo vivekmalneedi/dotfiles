@@ -40,7 +40,8 @@ require('packer').startup(function(use)
         requires = {
             'nvim-treesitter/playground',
             'RRethy/nvim-treesitter-endwise',
-            'nvim-treesitter/nvim-treesitter-context'
+            'nvim-treesitter/nvim-treesitter-context',
+            'nvim-treesitter/nvim-treesitter-textobjects'
         }
     }
     use {
@@ -217,7 +218,15 @@ require('packer').startup(function(use)
     use {
         "folke/which-key.nvim",
         config = function()
-            require("which-key").setup {}
+            require("which-key").setup {
+                plugins = {
+                    presets = {
+                        -- disable since which-key doesn't respect timeout
+                        -- when operater+num is entered
+                        operators = false,
+                    },
+                }
+            }
         end
     }
     use {
@@ -273,7 +282,6 @@ require('packer').startup(function(use)
         },
         config = function()
             local cmp = require('cmp')
-            local types = require('cmp.types')
             local compare = require('cmp.config.compare')
             local luasnip = require('luasnip')
             -- supertab mapping from https://github.com/hrsh7th/nvim-cmp/wiki/Example-mappings
@@ -396,6 +404,12 @@ end)
 -- syntax and colors
 vim.cmd [[colorscheme tokyonight-moon]]
 
+vim.api.nvim_create_autocmd('TextYankPost', {
+    callback = function()
+        vim.highlight.on_yank { higroup = 'IncSearch', timeout = 200 }
+    end,
+})
+
 require 'nvim-treesitter.configs'.setup {
     ensure_installed = "all",
     highlight = {
@@ -425,6 +439,61 @@ require 'nvim-treesitter.configs'.setup {
     endwise = {
         enable = true,
     },
+    textobjects = {
+        select = {
+            enable = true,
+            lookahead = true,
+            keymaps = {
+                ["af"] = "@function.outer",
+                ["if"] = "@function.inner",
+                ["ac"] = "@class.outer",
+                ["ic"] = { query = "@class.inner", desc = "Select inner part of a class region" },
+            },
+            selection_modes = {
+                ['@parameter.outer'] = 'v', -- charwise
+                ['@function.outer'] = 'V', -- linewise
+                ['@class.outer'] = '<c-v>', -- blockwise
+            },
+            include_surrounding_whitespace = true,
+        },
+        swap = {
+            enable = true,
+            swap_next = {
+                ["<leader>a"] = "@parameter.inner",
+            },
+            swap_previous = {
+                ["<leader>A"] = "@parameter.inner",
+            },
+        },
+        move = {
+            enable = true,
+            set_jumps = true, -- whether to set jumps in the jumplist
+            goto_next_start = {
+                ["]m"] = "@function.outer",
+                ["]]"] = { query = "@class.outer", desc = "Next class start" },
+            },
+            goto_next_end = {
+                ["]M"] = "@function.outer",
+                ["]["] = "@class.outer",
+            },
+            goto_previous_start = {
+                ["[m"] = "@function.outer",
+                ["[["] = "@class.outer",
+            },
+            goto_previous_end = {
+                ["[M"] = "@function.outer",
+                ["[]"] = "@class.outer",
+            },
+        },
+        lsp_interop = {
+            enable = true,
+            border = 'none',
+            peek_definition_code = {
+                ["<leader>df"] = "@function.outer",
+                ["<leader>dF"] = "@class.outer",
+            },
+        },
+    },
 }
 
 require 'treesitter-context'.setup {
@@ -445,12 +514,18 @@ vim.keymap.set("n", "<C-n>", "<cmd>NvimTreeToggle<cr>", { noremap = true })
 
 -- telescope
 local builtin = require('telescope.builtin')
-vim.keymap.set('n', '<leader>ff', builtin.find_files, {})
-vim.keymap.set('n', '<leader>fg', builtin.live_grep, {})
-vim.keymap.set('n', '<leader>fb', builtin.buffers, {})
-vim.keymap.set('n', '<leader>fh', builtin.help_tags, {})
-vim.keymap.set('n', '<leader>fs', builtin.lsp_document_symbols, {})
-vim.keymap.set('n', '<leader>fa', builtin.lsp_workspace_symbols, {})
+local wk = require("which-key")
+wk.register({
+    f = {
+        name = "find",
+        f = { builtin.find_files, "Files" },
+        g = { builtin.live_grep, "Live Grep" },
+        b = { builtin.buffers, "Buffers" },
+        h = { builtin.help_tags, "Help Tags" },
+        s = { builtin.lsp_document_symbols, "LSPDocSym" },
+        a = { builtin.lsp_workspace_symbols, "LspWorkSym" },
+    },
+}, { prefix = "<leader>" })
 
 -- lsp
 local nvim_lsp = require('lspconfig')
@@ -462,10 +537,16 @@ lsp_status.config {
 lsp_status.register_progress()
 
 local opts = { noremap = true, silent = true }
-vim.keymap.set('n', '<space>e', vim.diagnostic.open_float, opts)
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, opts)
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next, opts)
-vim.keymap.set('n', '<space>q', vim.diagnostic.setloclist, opts)
+
+wk.register({
+    d = {
+        name = "diag",
+        e = { vim.diagnostic.open_float, "open" },
+        q = { vim.diagnostic.setloclist, "setloclist" },
+    },
+}, { prefix = "<leader>" })
 
 -- Use an on_attach function to only map the following keys
 -- after the language server attaches to the current buffer
@@ -495,7 +576,7 @@ local on_attach = function(client, bufnr)
     -- Hover actions
     vim.keymap.set("n", "<C-space>", rt.hover_actions.hover_actions, { buffer = bufnr })
     -- Code action groups
-    vim.keymap.set("n", "<Leader>a", rt.code_action_group.code_action_group, { buffer = bufnr })
+    vim.keymap.set("n", "<Leader>ra", rt.code_action_group.code_action_group, { buffer = bufnr })
 
     if client.server_capabilities.documentRangeFormattingProvider then
         vim.keymap.set("v", "<space>f", "<cmd>lua vim.lsp.buf.range_formatting()<CR>", opts)
