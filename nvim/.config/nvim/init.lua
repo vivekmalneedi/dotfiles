@@ -100,6 +100,8 @@ require('packer').startup(function(use)
     }
 
     -- lsp
+    use 'williamboman/mason.nvim'
+    use 'williamboman/mason-lspconfig.nvim'
     use 'nvim-lua/lsp-status.nvim'
     use 'neovim/nvim-lspconfig'
     use {
@@ -113,14 +115,12 @@ require('packer').startup(function(use)
     }
     use {
         'romgrk/barbar.nvim',
-        requires = { 'kyazdani42/nvim-web-devicons' },
+        requires = { 'kyazdani42/nvim-web-devicons', 'lewis6991/gitsigns.nvim' },
         config = function()
             -- keybinds
             vim.keymap.set("n", "<C-j>", "<cmd>BufferNext<cr>", { noremap = true })
             vim.keymap.set("n", "<C-k>", "<cmd>BufferPrevious<cr>", { noremap = true })
             vim.keymap.set("n", "<C-m>", "<cmd>BufferClose<cr>", { noremap = true })
-            vim.cmd([[let bufferline = get(g:, 'bufferline', {})]])
-            vim.cmd('let bufferline.auto_hide = v:true')
         end
     }
     use {
@@ -345,8 +345,8 @@ require('packer').startup(function(use)
                     comparators = {
                         compare.offset,
                         compare.exact,
-                        require("clangd_extensions.cmp_scores"),
                         compare.recently_used,
+                        require("clangd_extensions.cmp_scores"),
                         compare.locality,
                         compare.kind,
                         compare.sort_text,
@@ -528,6 +528,9 @@ wk.register({
 }, { prefix = "<leader>" })
 
 -- lsp
+require("mason").setup()
+require("mason-lspconfig").setup()
+
 local nvim_lsp = require('lspconfig')
 local rt = require("rust-tools")
 local lsp_status = require('lsp-status')
@@ -602,6 +605,8 @@ local on_attach = function(client, bufnr)
         })
     end
 
+    require("clangd_extensions.inlay_hints").setup_autocmd()
+    require("clangd_extensions.inlay_hints").set_inlay_hints()
     lsp_status.on_attach(client)
 end
 
@@ -610,7 +615,7 @@ require("neodev").setup({})
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
 capabilities = vim.tbl_extend('keep', capabilities or {}, lsp_status.capabilities)
 
-local servers = { "pyright", "yamlls", "bashls", "cmake", "dockerls", "sumneko_lua" }
+local servers = { "pyright", "yamlls", "bashls", "cmake", "dockerls", "lua_ls", "clangd", "gopls"}
 for _, lsp in ipairs(servers) do
     nvim_lsp[lsp].setup {
         on_attach = on_attach,
@@ -642,13 +647,3 @@ rt.setup {
     },
 }
 
-require("clangd_extensions").setup {
-    server = {
-        handlers = lsp_status.extensions.clangd.setup(),
-        init_options = {
-            clangdFileStatus = true
-        },
-        on_attach = on_attach,
-        capabilities = capabilities,
-    },
-}

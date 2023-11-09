@@ -29,7 +29,7 @@ font:
     family: Sauce Code Pro Nerd Font Mono
     style: Italic
 
-  size: 9
+  size: 12
 
   offset:
     x: 0
@@ -110,8 +110,6 @@ shell:
   program: /usr/bin/fish
 
 enable_experimental_conpty_backend: false
-
-alt_send_esc: true
 
 key_bindings:
   - { key: V, mods: Control|Shift, action: Paste }
